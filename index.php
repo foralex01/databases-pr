@@ -1,1 +1,6 @@
-<?php echo "Hello World @^_^@" ?>
+<!-- redirects right to login page -->
+
+<?php
+
+header('Location: login.php');
+exit;
