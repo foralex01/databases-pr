@@ -1,3 +1,8 @@
+<?php
+require("connect-db.php");
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
