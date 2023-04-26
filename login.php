@@ -14,17 +14,17 @@ if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
 require_once "connect-db.php";
  
 // Define variables and initialize with empty values
-$username = $password = "";
+$cid = $password = "";
 $username_err = $password_err = $login_err = "";
  
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
  
     // Check if username is empty
-    if(empty(trim($_POST["username"]))){
-        $username_err = "Please enter username.";
+    if(empty(trim($_POST["cid"]))){
+        $username_err = "Please enter computing ID.";
     } else{
-        $username = trim($_POST["username"]);
+        $cid = trim($_POST["cid"]);
     }
     
     // Check if password is empty
@@ -37,22 +37,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate credentials
     if(empty($username_err) && empty($password_err)){
         // Prepare a select statement
-        $sql = "SELECT id, username, password FROM users WHERE username = :username";
+        $sql = "SELECT cid, password FROM Users WHERE cid = :cid";
         
-        if($stmt = $pdo->prepare($sql)){
+        if($stmt = $db->prepare($sql)){
             // Bind variables to the prepared statement as parameters
-            $stmt->bindParam(":username", $param_username, PDO::PARAM_STR);
+            $stmt->bindParam(":cid", $param_username);
             
             // Set parameters
-            $param_username = trim($_POST["username"]);
+            $param_username = trim($_POST["cid"]);
             
             // Attempt to execute the prepared statement
             if($stmt->execute()){
                 // Check if username exists, if yes then verify password
                 if($stmt->rowCount() == 1){
                     if($row = $stmt->fetch()){
-                        $id = $row["id"];
-                        $username = $row["username"];
+                        $cid = $row["cid"];
                         $hashed_password = $row["password"];
                         if(password_verify($password, $hashed_password)){
                             // Password is correct, so start a new session
@@ -60,8 +59,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             
                             // Store data in session variables
                             $_SESSION["loggedin"] = true;
-                            $_SESSION["id"] = $id;
-                            $_SESSION["username"] = $username;                            
+                            $_SESSION["username"] = $cid;                            
                             
                             // Redirect user to welcome page
                             header("location: welcome.php");
