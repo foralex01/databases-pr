@@ -2,10 +2,11 @@
 
 <?php
 // Include config file
-require_once "connect-db.php";
+// require_once "connect-db.php";
  
 // Define variables and initialize with empty values
 $username = $password = $confirm_password = "";
+$first_name = $last_name = "";
 $username_err = $password_err = $confirm_password_err = "";
  
 // Processing form data when form is submitted
@@ -66,15 +67,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(empty($username_err) && empty($password_err) && empty($confirm_password_err)){
         
         // Prepare an insert statement
-        $sql = "INSERT INTO users (username, password) VALUES (:username, :password)";
+        $sql = "INSERT INTO Student_Name (computing_ID, first_name, last_name, passwordHash) VALUES (:username, :first_name, :last_name, :password)";
          
         if($stmt = $pdo->prepare($sql)){
             // Bind variables to the prepared statement as parameters
             $stmt->bindParam(":username", $param_username, PDO::PARAM_STR);
+            $stmt->bindParam(":first_name", $param_first_name, PDO::PARAM_STR);
+            $stmt->bindParam(":last_name", $param_last_name, PDO::PARAM_STR);
             $stmt->bindParam(":password", $param_password, PDO::PARAM_STR);
             
             // Set parameters
             $param_username = $username;
+            $param_first_name = $first_name;
+            $param_last_name = $last_name;
             $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
             
             // Attempt to execute the prepared statement
@@ -112,10 +117,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         <p>Please fill this form to create an account.</p>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
             <div class="form-group">
-                <label>Username</label>
+                <label>First Name</label>
+                <input type="text" name="first_name" class="form-control" required >
+            </div>
+            <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" name="last_name" class="form-control" required >
+            </div>
+            <div class="form-group">
+                <label>UVA Computing ID</label>
                 <input type="text" name="username" class="form-control <?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $username; ?>">
                 <span class="invalid-feedback"><?php echo $username_err; ?></span>
-            </div>    
+            </div>
+            <!-- ADD a drop down for major here -->
             <div class="form-group">
                 <label>Password</label>
                 <input type="password" name="password" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $password; ?>">
