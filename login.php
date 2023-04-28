@@ -18,19 +18,19 @@ $cid = $password = "";
 $username_err = $password_err = $login_err = "";
  
 // Processing form data when form is submitted
-if($_SERVER["REQUEST_METHOD"] == "POST"){
+if($_SERVER["REQUEST_METHOD"] == "POST") {
  
     // Check if username is empty
     if(empty(trim($_POST["cid"]))){
-        $username_err = "Please enter computing ID.";
-    } else{
+        $username_err = "Please enter your computing ID.";
+    } else {
         $cid = trim($_POST["cid"]);
     }
     
     // Check if password is empty
     if(empty(trim($_POST["password"]))){
         $password_err = "Please enter your password.";
-    } else{
+    } else {
         $password = trim($_POST["password"]);
     }
     
@@ -47,28 +47,28 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $param_username = trim($_POST["cid"]);
             
             // Attempt to execute the prepared statement
-            if($stmt->execute()){
+            if($stmt->execute()) {
                 // Check if username exists, if yes then verify password
-                if($stmt->rowCount() == 1){
-                    if($row = $stmt->fetch()){
+                if($stmt->rowCount() == 1) {
+                    if($row = $stmt->fetch()) {
                         $cid = $row["cid"];
                         $hashed_password = $row["password"];
-                        if(password_verify($password, $hashed_password)){
+                        if(password_verify($password, $hashed_password)) {
                             // Password is correct, so start a new session
                             session_start();
                             
                             // Store data in session variables
                             $_SESSION["loggedin"] = true;
-                            $_SESSION["username"] = $cid;                            
+                            $_SESSION["cid"] = $cid;                         
                             
                             // Redirect user to welcome page
-                            header("location: welcome.php");
-                        } else{
+                            header("location: home.php");
+                        } else {
                             // Password is not valid, display a generic error message
                             $login_err = "Invalid username or password.";
                         }
                     }
-                } else{
+                } else {
                     // Username doesn't exist, display a generic error message
                     $login_err = "Invalid username or password.";
                 }
@@ -110,8 +110,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
             <div class="form-group">
-                <label>Username</label>
-                <input type="text" name="username" class="form-control <?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $username; ?>">
+                <label>Computing ID</label>
+                <input type="text" name="cid" class="form-control <?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $cid; ?>">
                 <span class="invalid-feedback"><?php echo $username_err; ?></span>
             </div>    
             <div class="form-group">
