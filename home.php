@@ -10,6 +10,8 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] === false){
     header("location: login.php"); // change from welcome.php to whatever we want our first page to be
     exit;
 }
+
+print("Hello, world!")
 ?>
 
 <!DOCTYPE html>
