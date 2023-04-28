@@ -1,5 +1,5 @@
 <?php
-require("connect-db.php");
+// require("connect-db.php");
 
 ?>
 
