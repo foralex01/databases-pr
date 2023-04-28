@@ -31,7 +31,7 @@ require("connect-db.php");
                     <li class="nav-item"><a class="nav-link" href="#">Search Courses</a></li>
                 </ul>
                 <ul class="navbar-nav my-2 my-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="#">My Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="settings.php">My Profile</a></li>
                 </ul>
             </div>
         </div>

@@ -2,10 +2,10 @@
 session_start();
 require("connect-db.php");
 // Check if the user is logged in first 
-if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
-    header("location: login.php");
-    exit;
-}
+// if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+//     header("location: login.php");
+//     exit;
+// }
 
 // Define variables and initialize with empty values
 $cid = $first_name = $last_name = $major = $concentration = "";
