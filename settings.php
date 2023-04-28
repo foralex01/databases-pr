@@ -69,7 +69,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     
     // Close connection
     unset($pdo);
-} else{
+} else {
     // Retrieve user information from database
     $sql = "SELECT first_name, last_name, major, concentration FROM Users WHERE cid = :cid";
     
@@ -89,3 +89,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     $last_name = $
 
 
+                }
+            }
+        }
+    }
+}
