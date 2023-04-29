@@ -60,6 +60,8 @@ require('requirements-function.php');
         </div>
 	</nav>
 
+
+
 <?php include('header.html') ?> 
 
 
@@ -87,9 +89,17 @@ require('requirements-function.php');
 </br>
 </br>
 
+<?php $completed_requirements = coursesCompleteRequirements($current_user['major_name'], "ht6xd"); ?>
 
-  
-  
+
+<div class="w3-light-grey w3-xlarge">
+  <div class="w3-container w3-green" style="width:50%">50%</div>
+</div>
+
+</br>
+</br>
+</br>
+</br>
 
 
 <?php $current_user = findMajorByUser("ht6xd"); 
@@ -181,6 +191,7 @@ $major_requirements = displayRequirements($current_user['major_name']);
   echo $req['course_code'];
   ?> </br>     
 <?php endforeach; ?>
+
 
 <?php $final = remainingRequirements($current_user['major_name']); ?>
 

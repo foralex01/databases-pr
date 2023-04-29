@@ -12,8 +12,10 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] === false){
 }
 ?>
 
+
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title>UVA Student Course Planner</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
