@@ -4,10 +4,11 @@ CS 4750 Group Project
 TODO:
 1. Logout (maybe in settings?)
 2. Page styling (CSS,HTML)
-3. Concurrency (maybe fine? idk lol)
-4. DB-level security: perms for admins vs the app users (setup User perms for site connection)
-5. (Optional) GCP Hosting
-6. (if time) add 'superusers' who can add/remove course listings
+3. Setup Home page (or just use planner page)
+4. Concurrency (maybe fine? idk lol)
+5. DB-level security: perms for admins vs the app users (setup User perms for site connection)
+6. (Optional) GCP Hosting
+7. (if time) add 'superusers' who can add/remove course listings
 
 In Progress:
 1. Settings (Rebecca)

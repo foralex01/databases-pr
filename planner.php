@@ -15,7 +15,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] === false){
 <!DOCTYPE html>
 <html>
 <head>
-	<title>UVA Student Course Planner</title>
+	<title>Course Planner and Past Schedule Page</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
@@ -32,7 +32,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] === false){
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
             <div class="navbar-brand">
-                <a class="navbar-brand" href="#">UVA Student Course Planner</a>
+                <a class="navbar-brand" href="home.php">UVA Student Course Planner</a>
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav mr-auto">
@@ -46,5 +46,17 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] === false){
             </div>
         </div>
 	</nav>
+
+    <!--TODO: Add planner section
+
+    Dropdown to choose year and semester (or all)
+        -allow into future (check planned courses)
+        -allow into past (check Student_Takes_Course)
+
+
+    Display list of courses for selected year/semester
+        -if all, seperate by year/semester blocks
+        -else list all courses
+    -->
 </body>
 </html>
