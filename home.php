@@ -26,6 +26,8 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] === false){
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 </head>
 <body>
+
+
 	<!-- <div class="mobile-menu" id="mobile-menu"> 
 		Menu <img src="http://www.shoredreams.net/wp-content/uploads/2014/02/show-menu-icon.png">
 	</div> -->
@@ -47,4 +49,21 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] === false){
         </div>
 	</nav>
 </body>
+
+</br>
+</br>
+
+<div class="text-center">
+
+
+<h2> Hello <?php echo $_SESSION["cid"]; ?> ! </h2>
+
+</br>
+
+<p> Welcome to your planner. </p>
+
+</div>
+
+
+
 </html>
