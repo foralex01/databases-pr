@@ -1,9 +1,10 @@
 <?php
-session_start();
 require_once "connect-db.php";
 require("settings_db.php");
 
+session_start();
 
+ehco $cid = $_SESSION["cid"];
 
 ?>
 
