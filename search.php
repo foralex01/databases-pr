@@ -2,6 +2,15 @@
 require('connect-db.php');
 require('search-db.php');
 
+session_start();
+// if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true)
+// {
+//     echo "logged in";
+// } else 
+// {
+//     echo "not logged in!";
+// }
+
 $searchResults = getAllCourses();
 // var_dump($searchResults);
 
@@ -12,21 +21,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         $searchText = $_POST['searchText'];
         $searchResults = searchCourses($searchText);
     }
-    if (!empty($_POST['PlannerButton']))
+    if (!empty($_POST['PlannerButton']) && isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true)
     {
+        echo $cid = $_SESSION["cid"];
         echo $dept = $_POST['dept_to_plan'];
         echo $course = $_POST['code_to_plan'];
         echo $semester = $_POST['semester_to_plan'];
         echo $year = $_POST['year_to_plan'];
-        addSectionToPlanner($dept, $course, $semester, $year);
+        addSectionToPlanner($cid, $dept, $course, $semester, $year);
     }
-    if (!empty($_POST['TakeButton']))
+    if (!empty($_POST['TakeButton']) && isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true)
     {
+        echo $cid = $_SESSION["cid"];
         echo $dept = $_POST['dept_taken'];
         echo $course = $_POST['code_taken'];
         echo $semester = $_POST['semester_taken'];
         echo $year = $_POST['year_taken'];
-        markSectionAsTaken($dept, $course, $semester, $year);
+        markSectionAsTaken($cid, $dept, $course, $semester, $year);
     }
 }
 ?>

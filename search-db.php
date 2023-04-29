@@ -33,4 +33,38 @@ function getAllCourses()
 	return $data;
 }
 
+function addSectionToPlanner($cid, $dept, $course, $semester, $year)
+{
+    global $db;
+
+	$query = "INSERT INTO Student_Plans_Course VALUES (:cid, :course_code, :dept_abbr, :semester, :year)";
+	$statement = $db->prepare($query);
+
+	$statement->bindValue(':cid', $cid);
+	$statement->bindValue(':course_code', $course);
+	$statement->bindValue(':dept_abbr', $dept);
+    $statement->bindValue(':semester', $semester);
+    $statement->bindValue(':year', $year);
+
+	$statement->execute();
+	$statement->closeCursor();
+}
+
+function markSectionAsTaken($cid, $dept, $course, $semester, $year)
+{
+    global $db;
+
+	$query = "INSERT INTO Student_Takes_Course VALUES (:cid, :course_code, :dept_abbr, :semester, :year, NULL)";
+	$statement = $db->prepare($query);
+
+	$statement->bindValue(':cid', $cid);
+	$statement->bindValue(':course_code', $course);
+	$statement->bindValue(':dept_abbr', $dept);
+    $statement->bindValue(':semester', $semester);
+    $statement->bindValue(':year', $year);
+
+	$statement->execute();
+	$statement->closeCursor();
+}
+
 ?>
