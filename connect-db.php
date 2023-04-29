@@ -1,24 +1,17 @@
 <?php
 /** S23, PHP (on GCP, local XAMPP, or CS server) connect to MySQL (on CS server) **/
-// $username = 'ht6xd'; 
-// $password = 'UpsornWinter2023';
-// $host = 'mysql01.cs.virginia.edu';
-// $dbname = 'ht6xd';
-// $dsn = "mysql:host=$host;dbname=$dbname";
+$username = 'ht6xd'; 
+$password = 'UpsornWinter2023';
+$host = 'mysql01.cs.virginia.edu';
+$dbname = 'ht6xd';
+$dsn = "mysql:host=$host;dbname=$dbname";
 ////////////////////////////////////////////
-
-/** local testing */
-$username = 'root';
-$password = '';
-$host = 'localhost:3306';           // default phpMyAdmin port = 3306
-$dbname = 'local_testing';
-$dsn = "mysql:host=$host;dbname=$dbname";  
 
 /** connect to the database **/
 try 
 {
 //  $db = new PDO("mysql:host=$hostname;dbname=db-demo", $username, $password);
-   $db = new PDO($dsn, $username, $password, array(PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION));
+   $db = new PDO($dsn, $username, $password);
    
    // dispaly a message to let us know that we are connected to the database 
    // echo "<p>You are connected to the database: $dsn</p>";
