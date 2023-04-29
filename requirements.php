@@ -50,7 +50,7 @@ require('requirements-function.php');
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active"><a class="nav-link" href="#">My Planner</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Degree Requirements</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/databases-pr/requirements.php">Degree Requirements</a></li>
                     <li class="nav-item"><a class="nav-link" href="search.php">Search Courses</a></li>
                 </ul>
                 <ul class="navbar-nav my-2 my-lg-0">
