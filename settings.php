@@ -36,11 +36,12 @@ if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true)
 </head>
 
 <body>
-<?php include('home.php'); ?>
+  
+<?php include('navbar.php'); ?>
   <h1>Your Profile</h1>
 <div class="profile-input-field">
         <h3>Keep your profile up-to-date!</h3>
-        <form method="post" action="#" >
+        <form method="post" action=""<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>"" >
           <div class="form-group">
             <label>First Name</label>
     
