@@ -2,15 +2,14 @@
 require('connect-db.php');
 require('search-db.php');
 
-// $searchResults = getAllCourses();
-$searchResults;
-var_dump($searchResults);
+$searchResults = getAllCourses();
+// var_dump($searchResults);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
     if (!empty($_POST['searchBtn']) && ($_POST['searchBtn'] == "Search"))
     {
-        echo $searchText = $_POST['searchText'];
+        $searchText = $_POST['searchText'];
         $searchResults = searchCourses($searchText);
     }
 }
@@ -26,13 +25,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 </head>
 <body>
-    <?php include('index.php');?>
-    <a>TODO: create search bar content</a>
+    <?php include('home.php');?>
+    <div class="container">
+        <br/>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8">
+                <form class="card card-sm" action="search.php" method="post">
+                    <div class="card-body row no-gutters align-items-center">
+                        <div class="col">
+                            <input class="form-control form-control-lg form-control-borderless" type="text" name="searchText" placeholder="Search by keyword" required />
+                        </div>
+                        <div class="col-auto">
+                            <input class="btn btn-lg btn-success" type="submit" name="searchBtn" value="Search" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-    <form action="search.php" method="post">
-        <input type="text" name="searchText" required />
-        <input type="submit" name="searchBtn" value="Search" />
-    </form>
+    </br>
 
     <div class="container">
                 <table>
