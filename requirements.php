@@ -31,12 +31,13 @@ require('requirements-function.php');
 <head>
 	<title>UVA Student Course Planner</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-
-    <meta charset="UTF-8">  
-    <meta name="author" content="Alexandra Martin, Henry Todd, Matthew Lunsford, Rebecca Chung"> 
-        
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <meta name="author" content="your name">
+  <meta name="description" content="include some description about your page">      
+  <title>DB interfacing</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="icon" type="image/png" href="http://www.cs.virginia.edu/~up3f/cs4750/images/db-icon.png" />
+</head>
 </head>
 
 <body>
@@ -61,6 +62,13 @@ require('requirements-function.php');
 
 <?php include('header.html') ?> 
 
+
+
+
+
+
+
+
 <div class="container">
 
 
@@ -69,53 +77,99 @@ require('requirements-function.php');
 //    echo greeting($_POST['name']) . "<br/>";
 ?>
 
-<h1>Requirements</h1>
+</br>
+</br>
+
+<div style="text-align:center;">
+<h3>Requirements<h3>
+</div>
+
+</br>
+</br>
+
 
   
   
-<hr/>
-<h2>User's (ht6xd) major </h2>
 
 
 <?php $current_user = findMajorByUser("ht6xd"); 
 
-echo $current_user['major_name'];?> </br>
+$major_requirements = displayRequirements($current_user['major_name']); 
 
-</br>
-</br>
-
-<h2>User's (ht6xd) major requirements and number of each requirement</h2>
-
-<?php $major_requirements = displayRequirements($current_user['major_name']); ?>
+?>
 
 
-<?php foreach ($major_requirements as $c): ?>
+
+<body>
+
+<table class="w3-table w3-bordered w3-card-4 center" style="width:100%">
+
+
+  <thead>
+    <th> Major Requirements - <?php echo $current_user['major_name'];?> </th>
+    <tr style="background-color:#DCEDC8">
+      <th scope="col">Requirement</th>
+      <th scope="col">Number of Requirements </th>
+    </tr>
+  </thead>
+
+
+  <tbody>
+  <?php foreach ($major_requirements as $req): ?>
+    
+      <tr class="table-success">
+        <td class = "tables-success"><?php echo $req['requirement_name']; ?></td>
+        <td><?php echo $req['num_required']; ?></td>
+     
+      </tr>
   
-  <?php echo $c['requirement_name']; 
-  echo "   "; 
-  echo $c['num_required'];
-  
-  ?> </br>     
+  <?php endforeach; ?>
+   
+    </tr>
+  </tbody>
+</table>
 
-<?php endforeach; ?>
-
-
+  </br>
+  </br>
+  </br>
+  </br>
+  </br>
 
 <?php $completed_requirements = coursesCompleteRequirements($current_user['major_name'], "ht6xd"); ?>
 
-</br>
-</br>
+<table class="w3-table w3-bordered w3-card-4 center" style="width:50%">
 
-<h2>User's (ht6xd) completed requirements:</h2>
 
-<?php foreach ($completed_requirements as $c_req): ?>
+  <thead>
+    <th> Completed Requirements: <?php echo $current_user['major_name'];?> </th>
+    <tr style="background-color:#DCEDC8">
+      <th scope="col">Requirement</th>
+      <th scope="col">Number of Requirements </th>
+    </tr>
+  </thead>
+
+
+  <tbody>
+  <?php foreach ($completed_requirements as $c_req): ?>
+    
+      <tr class="table-success">
+        <td class = "tables-success"><?php echo $c_req['requirement_name']; ?></td>
+        <td><?php echo $c_req['C']; ?></td>
+     
+      </tr>
   
-  <?php echo $c_req['requirement_name']; ?>
-  <?php
-  echo "   "; 
-  echo $c_req['C'];?> 
+  <?php endforeach; ?>
+   
+    </tr>
+  </tbody>
+</table>
 
-<?php endforeach; ?>
+
+
+</br>
+</br>
+
+
 
 <h3> Fulfilled by: </h3>
 
