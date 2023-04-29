@@ -4,7 +4,7 @@ function searchCourses($searchText)
 {
     global $db;
 	// define query
-	$query = "SELECT * FROM Course WHERE dept_abbr LIKE :searchText OR course_code LIKE :searchText OR course_name LIKE :searchText OR description LIKE :searchText";
+	$query = "SELECT * FROM Course NATURAL JOIN Section WHERE dept_abbr LIKE :searchText OR course_code LIKE :searchText OR course_name LIKE :searchText OR description LIKE :searchText";
     // prepare query
 	$statement = $db->prepare($query);
     $statement->bindValue(':searchText', '%'.$searchText.'%');
@@ -21,7 +21,7 @@ function getAllCourses()
 {
     global $db;
 	// define query
-	$query = "SELECT * FROM Course";
+	$query = "SELECT * FROM Course NATURAL JOIN Section";
 	// prepare query
 	$statement = $db->prepare($query);
 	// execute

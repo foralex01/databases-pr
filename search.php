@@ -12,6 +12,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         $searchText = $_POST['searchText'];
         $searchResults = searchCourses($searchText);
     }
+    if (!empty($_POST['PlannerButton']))
+    {
+        echo $dept = $_POST['dept_to_plan'];
+        echo $course = $_POST['code_to_plan'];
+        echo $semester = $_POST['semester_to_plan'];
+        echo $year = $_POST['year_to_plan'];
+        addSectionToPlanner($dept, $course, $semester, $year);
+    }
+    if (!empty($_POST['TakeButton']))
+    {
+        echo $dept = $_POST['dept_taken'];
+        echo $course = $_POST['code_taken'];
+        echo $semester = $_POST['semester_taken'];
+        echo $year = $_POST['year_taken'];
+        markSectionAsTaken($dept, $course, $semester, $year);
+    }
 }
 ?>
 
@@ -35,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                         <div class="col">
                             <input class="form-control form-control-lg form-control-borderless" type="text" name="searchText" placeholder="Search by keyword" required />
                         </div>
+                        <!-- Add ability to filter semester/year -->
                         <div class="col-auto">
                             <input class="btn btn-lg btn-success" type="submit" name="searchBtn" value="Search" />
                         </div>
@@ -50,9 +67,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                 <table>
                     <thead>
                         <tr>
-                            <th>Department</th>
-                            <th>Course Code</th>
+                            <th>Dept</th>
+                            <th>Course</th>
                             <th>Name</th>
+                            <th>Semester</th>
+                            <th>Year</th>
                             <th>Description</th>
                         </tr>
                     </thead>
@@ -61,7 +80,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             <td><?php echo $row['dept_abbr']; ?></td>
                             <td><?php echo $row['course_code']; ?></td>
                             <td><?php echo $row['course_name']; ?></td>
+                            <td><?php echo $row['semester']; ?></td>
+                            <td><?php echo $row['year']; ?></td>
                             <td><?php echo $row['description']; ?></td>
+                            <td>
+                                <form action="search.php" method="post">
+                                    <input type="submit" name="PlannerButton" value="Add To Planner" class="btn btn-dark" />
+                                    <input type="hidden" name="dept_to_plan" value ="<?php echo $row['dept_abbr']; ?>" />
+                                    <input type="hidden" name="code_to_plan" value ="<?php echo $row['course_code']; ?>" />
+                                    <input type="hidden" name="semester_to_plan" value ="<?php echo $row['semester']; ?>" />
+                                    <input type="hidden" name="year_to_plan" value ="<?php echo $row['year']; ?>" />
+                                </form>
+                            </td>
+                            <td>
+                                <form action="search.php" method="post">
+                                    <input type="submit" name="TakeButton" value="Mark As Taken" class="btn btn-dark" />
+                                    <input type="hidden" name="dept_taken" value ="<?php echo $row['dept_abbr']; ?>" />
+                                    <input type="hidden" name="code_taken" value ="<?php echo $row['course_code']; ?>" />
+                                    <input type="hidden" name="semester_taken" value ="<?php echo $row['semester']; ?>" />
+                                    <input type="hidden" name="year_taken" value ="<?php echo $row['year']; ?>" />
+                                </form>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </table>
