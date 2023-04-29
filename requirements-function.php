@@ -149,163 +149,47 @@ function findMajorByUser($computingid)
 	
 	return $results;
 
-	// global $db;
 	
-	// $query = "SELECT major_name FROM Student_In_Major WHERE cid = '".$computingid."'";
 
-	// $statement = $db->prepare($query);
-	// $statement->execute();
+}
+
+
+function courses()
+{
+
+    global $db;
+
+    //computing id is as passed in and courses_have_been_taken by the computing ID
 	
+	$query = "SELECT * FROM Course_Fulfills_Requirement";
+    
+    //.course_code, Course_Fulfills_Requirement.dept_abbr FROM
+    //Course_Fulfills_Requirement, Student_Takes_Course WHERE cid = :cid";
+    
+    //AND requirement_name = :requirement
+    //AND major = :major AND Student_Takes_Course.dept_abbr = Course_Fulfills_Requirement.dept_abbr AND
+    //Student_Takes_Course.course_code = Course_Fulfills_Requirement.dept_abbr";
+
+	$statement = $db->prepare($query);
+	//$statement->bindValue(':requirement', $requirement);
+    //$statement->bindValue(':major', $major);
+    // $statement->bindValue(':cid', $cid);
+	$statement->execute();
 	
-	// // $results = $statement->fetchAll();
+	// fetchAll() returns an array for all of the rows in the result set
+	// fetch() return a row
+	$results = $statement->fetchAll();
 	
+	// closes the cursor and frees the connection to the server so other SQL statements may be issued
+	$statement->closecursor();
 	
-	// $statement->closecursor();
-	
-	// return $results;
+	return $results;
+
 
 
 
 }
 
-
-
-
-// function that returns the difference b/t 
-
-
-
-
-
-	//return the intersection 
-
-	//SELECT * FROM Course_Taken WHERE cid 
-
-	//requirement -> major name, requirement_name
-	//course_fulfills_requirement -> major_name,
-	//requirement_name, course_code, dept_abbreiation
-
-	//Student_takes_course --> cid, course_code, dept_abbr
-	// semester, year, grade
-
-	//1. fist determine which requirements the courses fulfill
-		
-		//grab the courses using cid
-		// find the requirements of the department
-		// find the courses that satisfy the requirements
-
-			// if, in course_fufills_requriement, course code = "" and requirement name = ""
-			// the course fulfills the requirement
-
-
-			// SELECT dept_abbr and course_code WHERE major name = "" AND 
-
-		//intersect requirements with 
-
-
-		//in course_fulfills_requirement, find the count of each requirement
-
-		//SELECT COUNT(course_code)
-		//FROM Course_Fulfulls_Requirement
-		//GROUP BY requirement_name
-
-
-
-
-
-// select major classes that have already been taken
-// select requirements from major 
-// 
-
-// courses take NATURAL JOIN 
-// requirements where cid = cid and departement = major INTERSECT STUDENT TAKES COURSE
-// where cid = cid and department = 
-
-
-
-
-
-
-
-
-// 	// map requirement to number of courses required
-// 	// return dicrionary array with requirement name 
-
-
-
-// 	return $requirements_list;
-// }
-
-//function createCourseTakenList($courses_array, $course){
-
-	//add course to array
-
-
-	//return 0;
-
-//}
-
-//function deleteCourseTaken($courses_array, $course){
-
-	//check to see if course is in array
-
-	// if it's not,, keep original array
-
-	// if not, deletem from array and reincrement requirements
-
-
-	//return 0;
-
-//}
-
-
-//function courseFulfillsRequirements($course, $requirement)
-//{
-
-	// if course == course code + dept_abbr && requirement == requirement
-
-		//return True
-	 
-
-	//return 0;
-//}
-
-//function courses($courses_remaining, $courses_taken, $requirement, $requirements_for_course){
-
-	//foreach($courses_taken as $completed_course) {
-
-		//if courseFulfillsRequirements($value, $completed_course){
-
-			// decrement the requirement number
-
-
-
-		//}
-
-	//}
-
-	//return 0;
-
-
-
-
-//}
-
-
-// we develop an array of courses and course codes
-// select major
-// iterate through the array of courses and see what requirements have 
-// been completed
-
-	// 1. look at each requirement
-	// 2. put those requirements into an array
-	// 3. iterate through courses to see if they fulfill that requirement
-	// 4. if the course does, delete the course from the array and decrement
-	// the requirement number by 1
-	// 5. return the array of the remaining requirements and the count
-
-
-// 
 
 
 
