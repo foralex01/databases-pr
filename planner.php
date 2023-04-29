@@ -1,5 +1,6 @@
 <?php
-require("connect-db.php");
+require_once("connect-db.php");
+require("planner-db.php");
 
 // Initialize the session
 session_start();
@@ -10,6 +11,9 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] === false){
     header("location: login.php"); // change from welcome.php to whatever we want our first page to be
     exit;
 }
+
+$years = getYears($_SESSION["cid"]);
+$semesters = getSems($_SESSION["cid"]);
 ?>
 
 <!DOCTYPE html>
@@ -29,23 +33,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] === false){
 	<!-- <div class="mobile-menu" id="mobile-menu"> 
 		Menu <img src="http://www.shoredreams.net/wp-content/uploads/2014/02/show-menu-icon.png">
 	</div> -->
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <div class="navbar-brand">
-                <a class="navbar-brand" href="home.php">UVA Student Course Planner</a>
-            </div>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active"><a class="nav-link" href="planner.php">My Planner</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Degree Requirements</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Search Courses</a></li>
-                </ul>
-                <ul class="navbar-nav my-2 my-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="#">My Profile</a></li>
-                </ul>
-            </div>
-        </div>
-	</nav>
+	<?php include("navbar.php"); ?>
 
     <!--TODO: Add planner section
 
@@ -58,5 +46,24 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] === false){
         -if all, seperate by year/semester blocks
         -else list all courses
     -->
+    <div class="container">
+        <h1> Planner </h1>
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+            <label for="dropdowns"> Select Year and Semester </label>
+            <div class="container" id="dropdowns">
+                <select name="year" id="year" required>
+                    <?php foreach ($years as $year): ?>
+                        <option value=<?php echo $year['year']; ?>><?php echo $year['year']; ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <select name="sem" id="sem" required>
+                    <?php foreach ($semesters as $sem): ?>
+                        <option value=<?php echo $sem['semester']; ?>><?php echo $sem['semester']; ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </form>
+    </div>
+
 </body>
 </html>
