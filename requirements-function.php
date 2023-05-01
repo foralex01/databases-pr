@@ -171,6 +171,7 @@ function courses()
     //Student_Takes_Course.course_code = Course_Fulfills_Requirement.dept_abbr";
 
 	$statement = $db->prepare($query);
+    
 	//$statement->bindValue(':requirement', $requirement);
     //$statement->bindValue(':major', $major);
     // $statement->bindValue(':cid', $cid);
@@ -190,6 +191,80 @@ function courses()
 
 }
 
+function countDifference($major, $cid, $r_name)
+{
+    global $db;
+
+
+    $query = "SELECT cid, major_name, Course_Fulfills_Requirement.dept_abbr, Course_Fulfills_Requirement.course_code, requirement_name, COUNT(Course_Fulfills_Requirement.course_code) AS C FROM Course_Fulfills_Requirement, Student_Takes_Course WHERE
+	cid = :cid AND Course_Fulfills_Requirement.course_code = Student_Takes_Course.course_code AND
+	Course_Fulfills_Requirement.dept_abbr = Student_Takes_Course.dept_abbr
+	GROUP BY requirement_name HAVING major_name = :major AND requirement_name = :r_name";
+
+
+    $statement = $db->prepare($query);
+
+    $statement->bindValue(':major', $major);
+
+	$statement->bindValue(':cid', $cid);
+
+    $statement->bindValue(':r_name', $r_name);
+
+    $statement->execute();
+
+    $results = $statement->fetchAll();
+
+    $statement->closecursor();
+
+    return $results;
+
+}
+
+function classes($major, $cid, $r_name)
+{
+
+    global $db;
+
+
+    $query = "SELECT cid, major_name, Course_Fulfills_Requirement.dept_abbr, Course_Fulfills_Requirement.course_code, requirement_name
+    FROM Course_Fulfills_Requirement, Student_Takes_Course WHERE
+	cid = :cid AND Course_Fulfills_Requirement.course_code <> Student_Takes_Course.course_code AND
+	Course_Fulfills_Requirement.dept_abbr <> Student_Takes_Course.dept_abbr
+    GROUP BY requirement_name HAVING major_name = :major AND requirement_name = :r_name";
+	
+    //GROUP BY requirement_name HAVING major_name = :major AND requirement_name = :r_name";
+
+
+    $statement = $db->prepare($query);
+
+    $statement->bindValue(':major', $major);
+
+	$statement->bindValue(':cid', $cid);
+
+    $statement->bindValue(':r_name', $r_name);
+
+    $statement->execute();
+
+    $results = $statement->fetchAll();
+
+    $statement->closecursor();
+
+    return $results;
+
+
+
+}
+
+
+
+
+
+// function that shows the difference between the already completed requirements 
+// and the requirements that need to be met
+
+// requirements met by requirement_name
+
+// requirements not met by requirement_name
 
 
 

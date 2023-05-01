@@ -26,6 +26,8 @@ require('requirements-function.php');
 
 
 
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -89,28 +91,80 @@ require('requirements-function.php');
 </br>
 </br>
 
-<?php $completed_requirements = coursesCompleteRequirements($current_user['major_name'], "ht6xd"); ?>
+ 
+<?
 
 
-<div class="w3-light-grey w3-xlarge">
-  <div class="w3-container w3-green" style="width:50%">50%</div>
-</div>
 
-</br>
-</br>
-</br>
-</br>
+
+?>
+
+
 
 
 <?php $current_user = findMajorByUser("ht6xd"); 
 
 $major_requirements = displayRequirements($current_user['major_name']); 
 
+$completed_requirements = coursesCompleteRequirements($current_user['major_name'], "ht6xd");
+
+
+
+// echo $x;
+
 ?>
 
 
 
 <body>
+
+
+
+<?php 
+
+$x = 0;
+
+foreach ($major_requirements as $req):
+
+  $x = $x + $req['num_required'];
+
+
+
+
+endforeach; 
+
+
+
+$y = 0;
+
+
+foreach ($completed_requirements as $req):
+
+  $y = $y + $req['C'];
+
+
+
+endforeach; 
+
+
+
+
+$result = ($y / $x) * 100;
+
+// echo round($result);
+
+?>
+
+
+
+<div class="w3-light-grey w3-xlarge">
+  <div class="w3-container w3-green" style="width:25%"> 50% </div>
+</div>
+
+</br>
+</br>
+</br>
+
 
 <table class="w3-table w3-bordered w3-card-4 center" style="width:100%">
 
@@ -120,6 +174,7 @@ $major_requirements = displayRequirements($current_user['major_name']);
     <tr style="background-color:#DCEDC8">
       <th scope="col">Requirement</th>
       <th scope="col">Number of Requirements </th>
+      
     </tr>
   </thead>
 
@@ -147,24 +202,72 @@ $major_requirements = displayRequirements($current_user['major_name']);
 
 <?php $completed_requirements = coursesCompleteRequirements($current_user['major_name'], "ht6xd"); ?>
 
-<table class="w3-table w3-bordered w3-card-4 center" style="width:50%">
+
+<table class="w3-table w3-bordered w3-card-4 center" style="width:100%">
 
 
   <thead>
-    <th> Completed Requirements: <?php echo $current_user['major_name'];?> </th>
+    <th> Remaining Requirements: </th>
     <tr style="background-color:#DCEDC8">
       <th scope="col">Requirement</th>
       <th scope="col">Number of Requirements </th>
+      <th scope="col">Currently Being Fulfilled By: </th>
+      <th scope="col">Possible Courses to Fulfill these Requirements: </th>
     </tr>
   </thead>
 
 
   <tbody>
-  <?php foreach ($completed_requirements as $c_req): ?>
+
+  
+
+  <!-- displaying remaining requirements -->
+  <?php foreach ($major_requirements as $req):
+
+
+    
+    
+    $x = 0;
+
+    $h = classes($current_user['major_name'], "ht6xd", $req['requirement_name']); 
+
+    $a = countDifference($current_user['major_name'], "ht6xd", $req['requirement_name']); 
+
+
+    $m = "";
+    $n = "";
+
+    $d = "";
+    $z = "";
+
+    foreach ($h as $count):
+
+      
+      $m = $m .= $count['dept_abbr'];
+      $n = $n .= $count['course_code'];
+
+    
+
+    endforeach;
+
+    
+
+    
+    foreach ($a as $count):
+
+      $x = $x + $count['C'];
+      $d = $d .= $count['dept_abbr'];
+      $z = $z .= $count['course_code'];
+
+    endforeach;
+
+    ?>
     
       <tr class="table-success">
-        <td class = "tables-success"><?php echo $c_req['requirement_name']; ?></td>
-        <td><?php echo $c_req['C']; ?></td>
+        <td class = "tables-success"><?php echo $req['requirement_name']; ?></td>
+        <td><?php echo $req['num_required'] - $x; ?></td>
+        <td><?php echo $d .=$z; ?></td>
+        <td><?php echo $m .=$n; ?></td>
      
       </tr>
   
@@ -174,8 +277,13 @@ $major_requirements = displayRequirements($current_user['major_name']);
   </tbody>
 </table>
 
+
+
 <!-- fulfilled by dept and course codes where course_fulfills_requirement.requirement = requirement ,, display codes-->
 
+<!-- completed requirements allows me to see what has been yet been completed -->
+
+<!-- use the C to filter the number that have been completed -->
 
 
 </br>
@@ -183,48 +291,55 @@ $major_requirements = displayRequirements($current_user['major_name']);
 
 
 
-<h3> Fulfilled by: </h3>
-
-<?php foreach ($completed_requirements as $req): ?>
-
-<?php echo $req['dept_abbr'];
-  echo $req['course_code'];
-  ?> </br>     
-<?php endforeach; ?>
-
-
-<?php $final = remainingRequirements($current_user['major_name']); ?>
 
 
 
-<?php foreach ($final as $f): ?>
 
-  
-  <?php echo $f['requirement_name']; ?>
-  <?php
-  echo "   "; 
-  echo $f['num_required'];?> 
+<!-- function that shows the difference between the already completed requirements 
+and the requirements that need to be met -->
 
-<?php endforeach; ?>
-
-<?php foreach ($completed_requirements as $c_req): ?>
-  
-  <?php echo $c_req['requirement_name']; ?>
-  <?php
-  echo "   "; 
-  echo $c_req['C'];?> 
-
-<?php endforeach; ?>
-
+<!-- return count where requiremernt_name == ___ -->
 
 
 
 <br/>
 
 
+
+
+
+
+
+
+<?php
+
+
+
+//first display all requirements
+//return that requriement name 
+// then use that requirement name to find the number
+
+
+
+
+$major_requirements = displayRequirements($current_user['major_name']); 
+
+//find difference in requirements
+
+
+
+// ?>
+
+
+
+
+
+
+
 <?php include('footer.html') ?>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
 
 
 
