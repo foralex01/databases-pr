@@ -170,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     </br>
 
     <div class="container">
-                <table>
+                <table class="table table-list-search">
                     <thead>
                         <tr>
                             <th>Dept</th>

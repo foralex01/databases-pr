@@ -98,29 +98,35 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         -else list all courses
     -->
     <div class="container">
+        <br/>
         <h1> Planner </h1>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-            <div class="container" id="dropdowns">
-                <label for="year">Year:</label>
-                <select name="year" id="year" required onchange=this.form.submit();>
-                    <option value="all"> All </option>
-                    <?php foreach ($years as $year): ?>
-                        <option value=<?php echo $year['year']; ?> <?php if($curr_year == $year['year']) { ?> selected=true <?php }; ?>><?php echo $year['year']; ?></option>
-                    <?php endforeach; ?>
-                </select>
-                <label for="sem">Semester: </label>
-                <select name="sem" id="sem" required onchange=this.form.submit();>
-                    <?php if(!$na): ?>
-                    <?php foreach ($semesters as $sem): ?>
-                        <option value=<?php echo $sem['semester']; ?> <?php if($curr_sem == $sem['semester']) { ?> selected=true <?php }; ?> ><?php echo $sem['semester']; ?></option>
-                    <?php endforeach; ?>
-                    <?php else: ?>
-                        <option value = "Fall"> N/A </option>
-                    <?php endif; ?>
-                </select>
+            <div class="row" id="dropdowns">
+                <div class="col-sm-2">
+                    <label for="year">Year:</label>
+                    <select class="form-select" name="year" id="year" required onchange=this.form.submit();>
+                        <option value="all"> All </option>
+                        <?php foreach ($years as $year): ?>
+                            <option value=<?php echo $year['year']; ?> <?php if($curr_year == $year['year']) { ?> selected=true <?php }; ?>><?php echo $year['year']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-sm-2">
+                    <label for="sem">Semester: </label>
+                    <select class="form-select" name="sem" id="sem" required onchange=this.form.submit();>
+                        <?php if(!$na): ?>
+                        <?php foreach ($semesters as $sem): ?>
+                            <option value=<?php echo $sem['semester']; ?> <?php if($curr_sem == $sem['semester']) { ?> selected=true <?php }; ?> ><?php echo $sem['semester']; ?></option>
+                        <?php endforeach; ?>
+                        <?php else: ?>
+                            <option value = "Fall"> N/A </option>
+                        <?php endif; ?>
+                    </select>
+                </div>
             </div>
         </form>
     </div>
+    <br/>
     <div class="container">
         <!-- Display "Planner" or "Schedule" based on if year is current year or before -->
         <?php if($curr_year == "all"): ?>
@@ -136,8 +142,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php endif; ?>
         <!-- Display list of planned/previously taken courses based on selected year/sem -->
         <!-- If "all" courses, print ordered by year -->
-        <div class="container"> 
-            <table>
+        <div class="col-md-9"> 
+            <table class="table table-list-search">
                 <thead>
                     <tr>
                         <th>Dept</th>
