@@ -39,7 +39,7 @@ function updateMajor($cid, $major_name, $type, $concentration) {
 
 function getPrimaryMajor($cid) {
     global $db;
-    $query = "SELECT major_name FROM Student_In_Major WHERE cid=:cid AND major_name IS NOT NULL AND type=\"primary\"";
+    $query = "SELECT major_name, concentration FROM Student_In_Major WHERE cid=:cid AND major_name IS NOT NULL AND type=\"primary\"";
     if($statement = $db->prepare($query)) {
         $statement->bindValue(":cid", $cid);
         if($statement->execute()) {
@@ -57,7 +57,7 @@ function getPrimaryMajor($cid) {
 
 function getSecondMajor($cid) {
     global $db;
-    $query = "SELECT major_name FROM Student_In_Major WHERE cid=:cid AND type=\"secondary\"";
+    $query = "SELECT major_name, concentration FROM Student_In_Major WHERE cid=:cid AND type=\"secondary\"";
     if($statement = $db->prepare($query)) {
         $statement->bindValue(":cid", $cid);
         if($statement->execute()) {
@@ -89,7 +89,7 @@ function getMajor() {
 }
 function updatePrimaryMajor($cid, $new_major_name, $new_concentration) {
     global $db;
-    $query = "UPDATE Student_In_Major SET major_name = :major_name, concentration = :concentration WHERE cid = :cid AND type = 'primary'";
+    $query = "UPDATE Student_In_Major SET major_name = :major_name, concentration = :concentration WHERE cid = :cid AND type = \"primary\"";
     $statement = $db->prepare($query);
     $statement->bindValue(':cid', $cid);
     $statement->bindValue(':major_name', $new_major_name);
@@ -101,7 +101,7 @@ function updatePrimaryMajor($cid, $new_major_name, $new_concentration) {
 
 function insertPrimaryMajor($cid, $major_name, $concentration) {
     global $db;
-    $query = "INSERT INTO Student_In_Major (cid, major_name, concentration, type) VALUES (:cid, :major_name, :concentration, 'primary')";
+    $query = "INSERT INTO Student_In_Major (cid, major_name, concentration, type) VALUES (:cid, :major_name, :concentration, \"primary\")";
     $statement = $db->prepare($query);
     $statement->bindValue(':cid', $cid);
     $statement->bindValue(':major_name', $major_name);
@@ -113,19 +113,18 @@ function insertPrimaryMajor($cid, $major_name, $concentration) {
 
 function updateSecondMajor($cid, $major_name, $concentration) {
     global $db;
-    $query = "UPDATE Student_In_Major SET major_name = :major_name, concentration = :concentration WHERE cid = :cid AND type = 'secondary'";
+    $query = "UPDATE Student_In_Major SET major_name = :major_name, concentration = :concentration WHERE cid = :cid AND type = \"secondary\"";
 	$statement = $db->prepare($query);
 	$statement->bindValue(':cid', $cid);
 	$statement->bindValue(':major_name', $major_name);
 	$statement->bindValue(':concentration', $concentration);
 	$statement->execute();
 	$statement->closeCursor();
-    return result;
 }
 
 function insertSecondMajor($cid, $major_name, $concentration) {
     global $db;
-    $query = "INSERT INTO Student_In_Major (cid, major_name, type, concentration) VALUES (:cid, :major_name, 'secondary', :concentration)";
+    $query = "INSERT INTO Student_In_Major (cid, major_name, type, concentration) VALUES (:cid, :major_name, \"secondary\", :concentration)";
 	$statement = $db->prepare($query);
 	$statement->bindValue(':cid', $cid);
 	$statement->bindValue(':major_name', $major_name);
