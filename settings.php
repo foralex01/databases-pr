@@ -36,7 +36,7 @@ $first_concentration = $second_concentration = "";
 
 $first_major = getPrimaryMajor($cid);
 if($first_major != null) {
-  $first_concentration = $first_major['concentration'];
+  if(array_key_exists("concentration", $first_major)) {$first_concentration = $first_major['concentration'];}
   $first_major = $first_major["major_name"];
 }
 else {
@@ -45,7 +45,7 @@ else {
 
 $second_major = getSecondMajor($cid);
 if($second_major != null) {
-  $second_concentration = $second_major['concentration'];
+  if(array_key_exists("concentration", $second_major)) {$second_concentration = $second_major['concentration'];}
   $second_major = $second_major["major_name"];
 }
 else {
