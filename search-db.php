@@ -34,22 +34,21 @@ function searchCourses($postVariables)
     // add conditions
     if (count($conditions) > 0) {
         $query .= " WHERE " . implode(' AND ', $conditions);
+        $query .= " ORDER BY Section.dept_abbr";
     }
-
-    // take out courses already planned/taken
-    $query .= " AND " . "(Section.course_code, Section.dept_abbr, Section.semester, Section.year) NOT IN (SELECT Student_Plans_Course.course_code, Student_Plans_Course.dept_abbr, Student_Plans_Course.semester, Student_Plans_Course.year FROM Student_Plans_Course
-    LEFT JOIN Student_Takes_Course ON Student_Plans_Course.course_code = Student_Takes_Course.course_code AND Student_Plans_Course.dept_abbr = Student_Takes_Course.dept_abbr AND Student_Plans_Course.semester = Student_Takes_Course.semester AND Student_Plans_Course.year = Student_Takes_Course.year AND Student_Plans_Course.cid = Student_Takes_Course.cid WHERE Student_Plans_Course.cid = :cid
-    UNION
-    SELECT Student_Takes_Course.course_code, Student_Takes_Course.dept_abbr, Student_Takes_Course.semester, Student_Takes_Course.year FROM Student_Plans_Course
-    RIGHT JOIN Student_Takes_Course ON Student_Plans_Course.course_code = Student_Takes_Course.course_code AND Student_Plans_Course.dept_abbr = Student_Takes_Course.dept_abbr AND Student_Plans_Course.semester = Student_Takes_Course.semester AND Student_Plans_Course.year = Student_Takes_Course.year AND Student_Plans_Course.cid = Student_Takes_Course.cid WHERE Student_Takes_Course.cid = :cid)";
 
     // prepare query
 	$statement = $db->prepare($query);
-    $statement->bindValue(':searchText', '%'.$searchText.'%');
-    $statement->bindValue(':semester', $semester);
-    $statement->bindValue(':year', $year);
-    $statement->bindValue(':dept', $dept);
-    $statement->bindValue('cid', $cid);
+    if (!empty($searchText)) {
+        $statement->bindValue(':searchText', '%'.$searchText.'%');
+    }
+    if (!empty($semesterYear) && $semesterYear != "Filter by Semester...") {
+        $statement->bindValue(':semester', $semester);
+        $statement->bindValue(':year', $year);
+    }
+    if (!empty($dept) && $dept != "Filter by Department...") {
+        $statement->bindValue(':dept', $dept);
+    }
 	
     // execute
     $statement->execute();
@@ -157,6 +156,7 @@ function getAllCourses()
     global $db;
 	// define query
 	$query = "SELECT * FROM Course NATURAL JOIN Section";
+    $query .= " ORDER BY Section.dept_abbr";
 	// prepare query
 	$statement = $db->prepare($query);
 	// execute
