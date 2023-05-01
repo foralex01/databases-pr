@@ -38,7 +38,9 @@ function getSems($cid) {
 //get all planned courses for the current student
 function getCourses($cid) {
     global $db;
-    $query = "SELECT * FROM Student_Plans_Course WHERE cid = :cid";
+    $query = "(SELECT dept_abbr, course_name, course_code, year, semester FROM Student_Plans_Course NATURAL JOIN Course WHERE cid = :cid UNION
+    SELECT dept_abbr, course_name, course_code, year, semester FROM Student_Takes_Course NATURAL JOIN Course WHERE cid = :cid)
+    ORDER BY year DESC, semester";
     $stmt = $db->prepare($query);
 
     //Set cid
@@ -56,7 +58,12 @@ function getCourses($cid) {
 //get all courses for a particular semester and year
 function getCoursesSemYear($cid, $sem, $year) {
     global $db;
-    $query = "SELECT * FROM Student_Plans_Course WHERE cid = :cid AND semester=:sem AND year=:year";
+    $query = "WITH T AS ";
+    $query .= "(SELECT dept_abbr, course_name, course_code, year, semester FROM Student_Plans_Course NATURAL JOIN Course WHERE cid=:cid";
+    $query .= " UNION";
+    $query .= " SELECT dept_abbr, course_name, course_code, year, semester FROM Student_Takes_Course NATURAL JOIN Course WHERE cid=:cid)";
+    $query .= " SELECT * FROM T";
+    $query .= " WHERE semester = :sem AND year=:year";
     $stmt = $db->prepare($query);
 
     //Set cid

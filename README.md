@@ -2,13 +2,20 @@
 CS 4750 Group Project
 
 TODO:
-1. Logout (maybe in settings?)
-2. Page styling (CSS,HTML)
-3. Setup Home page (or just use planner page)
-4. Concurrency (maybe fine? idk lol)
-5. DB-level security: perms for admins vs the app users (setup User perms for site connection)
+1. Update (Henry)
+    -What year/semester a course is planned for (via the planner page)
+2. Delete (Matt)
+    -from planner/schedule (via planner page or search page)
+3. Logout button (Rebecca) (in settings)
+    -set $_SESSION["cid"] to NULL and $_SESSION["loggedin] = false
+    -redirect to login.php
+4. DB-level security (Henry?? Or someone else if they have time)
+    -perms for the app users (setup User perms for site connection)
+    -users should be able to view everything, add/delete/update their name, major, planned/taken courses
+5. Setup Home page
+    -buttons routing to the various pages
+    -or just use planner page as default
 6. (Optional) GCP Hosting
-7. (if time) add 'superusers' who can add/remove course listings
 
 In Progress:
 1. Settings (Rebecca)
