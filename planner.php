@@ -15,10 +15,10 @@ else {
     $cid = $_SESSION["cid"];
 }
 
-$years = getYears($_SESSION["cid"]);
-$semesters = getSems($_SESSION["cid"]);
+$years = getYears($cid);
+$semesters = getSems($cid);
 
-$courses;
+$courses = getCourses($cid);
 
 $curr_year = "all";
 $curr_sem = "all";
@@ -105,14 +105,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                 <select name="year" id="year" required onchange=this.form.submit();>
                     <option value="all"> All </option>
                     <?php foreach ($years as $year): ?>
-                        <option value=<?php echo $year['year']; ?> <?php if($_POST['year'] == $year['year']) { ?> selected=true <?php }; ?>><?php echo $year['year']; ?></option>
+                        <option value=<?php echo $year['year']; ?> <?php if($curr_year == $year['year']) { ?> selected=true <?php }; ?>><?php echo $year['year']; ?></option>
                     <?php endforeach; ?>
                 </select>
                 <label for="sem">Semester: </label>
                 <select name="sem" id="sem" required onchange=this.form.submit();>
                     <?php if(!$na): ?>
                     <?php foreach ($semesters as $sem): ?>
-                        <option value=<?php echo $sem['semester']; ?> <?php if($_POST['sem'] == $sem['semester']) { ?> selected=true <?php }; ?> ><?php echo $sem['semester']; ?></option>
+                        <option value=<?php echo $sem['semester']; ?> <?php if($curr_sem == $sem['semester']) { ?> selected=true <?php }; ?> ><?php echo $sem['semester']; ?></option>
                     <?php endforeach; ?>
                     <?php else: ?>
                         <option value = "Fall"> N/A </option>
