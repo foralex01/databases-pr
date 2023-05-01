@@ -2,23 +2,19 @@
 CS 4750 Group Project
 
 TODO:
-1. Update (Rebecca/Henry)
-    -What year/semester a course is planned for (via the planner page)
-    -or, updating major
-2. Delete (Matt)
-    -from planner/schedule (via planner page or search page)
-4. DB-level security (Henry?? Or someone else if they have time)
+1. DB-level security  (HOW DO WE DO THIS ON CS SERVER??)
     -perms for the app users (setup User perms for site connection)
     -users should be able to view everything, add/delete/update their name, major, planned/taken courses
-5. Setup Home page
-    -buttons routing to the various pages
-    -or just use planner page as default
-6. (Optional) GCP Hosting
-
-In Progress:
-1. Settings (Rebecca)
-    making the changes to profile be saved. 
-2. Major Requirements (Alex)
+2. CHECKS/TRIGGERS (Adv. SQL)
+3. Add Planner data
+4. Bootstrap for settings page
+5. Finish report
+    -fix ER diagrams
+    -make sure table headings are up-to-date!
+    -see https://www.cs.virginia.edu/~up3f/cs4750/project/index.html#!/finalprj for rest of info!
+6. Test concurrent users by opening site in multiple tabs
+7. (Optional) GCP Hosting (for extra credit and to fix DB-level security)
+8. Peer-eval!!
 
 Completed:
 1. Login/Logout Register
@@ -26,3 +22,5 @@ Completed:
 3. Course search/filter
 4. Logout button
 5. Planner
+6. Update SQL (update majors)
+7. Delete (delete from Plans/Takes)
