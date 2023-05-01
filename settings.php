@@ -51,6 +51,39 @@ if($second_major != null) {
 else {
   $second_major = "";
 }
+
+if(isset($_POST["savechanges"])) {
+    if(isset($_POST["major"])) {
+        $new_primary_major = trim($_POST["major"]);
+        $new_primary_concentration = trim($_POST["concentration"]);
+        if($new_primary_major != "") {
+            if($first_major != "") {
+                //need to UPDATE primary major
+                updatePrimaryMajor($cid, $new_primary_major, $new_primary_concentration);
+            } else {
+                //need to INSERT primary major for first time
+                insertPrimaryMajor($cid, $new_primary_major, $new_primary_concentration);
+            }
+        } else {
+            echo "Please insert a primary major";
+        }
+    }
+    if(isset($_POST["major2"])) {
+        $new_second_major = trim($_POST["major2"]);
+        $new_second_concentration = trim($_POST["concentration2"]);
+        if($new_second_major != "") {
+            if($second_major != "") {
+                //need to UPDATE second major
+                updateSecondMajor($cid, $new_second_major, $new_second_concentration);
+            } else {
+                //need to INSERT second major for first time
+                insertSecondMajor($cid, $new_second_major, $new_second_concentration);
+            }
+        } else {
+            echo "Please insert a second major";
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
