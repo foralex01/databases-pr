@@ -7,32 +7,74 @@ require('search-db.php');
 
 session_start();
 
-$searchResults = getAllCourses();
+$searchResults;
+$coursesPlanned;
+$coursesTaken;
+
+if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
+    $searchResults = getAllCourses();
+
+    $coursesPlanned = getCoursesPlanned($_SESSION['cid']);
+    $coursesTaken = getCoursesTaken($_SESSION['cid']);
+}
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
-    if (!empty($_POST['searchBtn']) && ($_POST['searchBtn'] == "Search"))
+    if (!empty($_POST['searchBtn']) && ($_POST['searchBtn'] == "Search") && isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true)
     {
         $postVariables = $_POST;
-        $searchResults = searchCourses($postVariables);
+        $cid = $_SESSION["cid"];
+        $searchResults = searchCourses($postVariables, $cid);
     }
     if (!empty($_POST['PlannerButton']) && isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true)
     {
-        echo $cid = $_SESSION["cid"];
-        echo $dept = $_POST['dept_to_plan'];
-        echo $course = $_POST['code_to_plan'];
-        echo $semester = $_POST['semester_to_plan'];
-        echo $year = $_POST['year_to_plan'];
+        $cid = $_SESSION["cid"];
+        $dept = $_POST['dept_plan'];
+        $course = $_POST['code_plan'];
+        $semester = $_POST['semester_plan'];
+        $year = $_POST['year_plan'];
         addSectionToPlanner($cid, $dept, $course, $semester, $year);
+
+        $coursesPlanned = getCoursesPlanned($_SESSION['cid']);
+        $coursesTaken = getCoursesTaken($_SESSION['cid']);
+        $searchResults = getAllCourses();
     }
     if (!empty($_POST['TakeButton']) && isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true)
     {
-        echo $cid = $_SESSION["cid"];
-        echo $dept = $_POST['dept_taken'];
-        echo $course = $_POST['code_taken'];
-        echo $semester = $_POST['semester_taken'];
-        echo $year = $_POST['year_taken'];
+        $cid = $_SESSION["cid"];
+        $dept = $_POST['dept_take'];
+        $course = $_POST['code_take'];
+        $semester = $_POST['semester_take'];
+        $year = $_POST['year_take'];
         markSectionAsTaken($cid, $dept, $course, $semester, $year);
+
+        $coursesPlanned = getCoursesPlanned($_SESSION['cid']);
+        $coursesTaken = getCoursesTaken($_SESSION['cid']);
+        $searchResults = getAllCourses();
+    }
+    if (!empty($_POST['RemovePlanner']) && isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
+        $cid = $_SESSION["cid"];
+        $dept = $_POST['dept_plan'];
+        $course = $_POST['code_plan'];
+        $semester = $_POST['semester_plan'];
+        $year = $_POST['year_plan'];
+        removeSectionFromPlanner($cid, $dept, $course, $semester, $year);
+        
+        $coursesPlanned = getCoursesPlanned($_SESSION['cid']);
+        $coursesTaken = getCoursesTaken($_SESSION['cid']);
+        $searchResults = getAllCourses();
+    }
+    if (!empty($_POST['RemoveTaken']) && isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
+        $cid = $_SESSION["cid"];
+        $dept = $_POST['dept_take'];
+        $course = $_POST['code_take'];
+        $semester = $_POST['semester_take'];
+        $year = $_POST['year_take'];
+        unmarkSectionAsTaken($cid, $dept, $course, $semester, $year);
+
+        $coursesPlanned = getCoursesPlanned($_SESSION['cid']);
+        $coursesTaken = getCoursesTaken($_SESSION['cid']);
+        $searchResults = getAllCourses();
     }
 }
 ?>
@@ -55,9 +97,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                 <form class="card card-sm" action="search.php" method="post">
                     <div class="card-body row no-gutters align-items-center">
                         <div class="col-lg-3">
-                            <input class="form-control form-control-borderless" type="text" name="searchText" placeholder="Search by keyword" />
+                            <input class="form-control form-control-borderless" type="text" name="searchText" placeholder="Search by keyword" required />
                         </div>
-                        <!-- Add ability to filter semester/year -->
+                        <!-- ability to filter semester/year -->
                         <div class="col-lg-3 col-md-3 col-sm-12">
                             <select class="form-control search-slt" name="semesterYearFilter">
                                 <option>Filter by Semester...</option>
@@ -78,6 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                                 <option>Spring 2019</option>
                             </select>
                         </div>
+                        <!-- ability to filter department -->
                         <div class="col-lg-3 col-md-3 col-sm-12">
                             <select class="form-control search-slt" name="deptFilter">
                                 <option>Filter by Department...</option>
@@ -144,20 +187,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             <td><?php echo $row['description']; ?></td>
                             <td>
                                 <form action="search.php" method="post">
-                                    <input type="submit" name="PlannerButton" value="Add To Planner" class="btn btn-dark" />
-                                    <input type="hidden" name="dept_to_plan" value ="<?php echo $row['dept_abbr']; ?>" />
-                                    <input type="hidden" name="code_to_plan" value ="<?php echo $row['course_code']; ?>" />
-                                    <input type="hidden" name="semester_to_plan" value ="<?php echo $row['semester']; ?>" />
-                                    <input type="hidden" name="year_to_plan" value ="<?php echo $row['year']; ?>" />
+                                    <?php if(isAlreadyPlanned($row["course_code"], $row["dept_abbr"], $row["semester"], $row["year"], $coursesPlanned)): ?>
+                                            <input type="submit" name="RemovePlanner" value="Remove From Planner" class="btn btn-danger" />
+                                        <?php else: ?>
+                                            <input type="submit" name="PlannerButton" value="Add to Planner" class="btn btn-dark" />
+                                        <?php endif; ?>
+                                    <input type="hidden" name="dept_plan" value ="<?php echo $row['dept_abbr']; ?>" />
+                                    <input type="hidden" name="code_plan" value ="<?php echo $row['course_code']; ?>" />
+                                    <input type="hidden" name="semester_plan" value ="<?php echo $row['semester']; ?>" />
+                                    <input type="hidden" name="year_plan" value ="<?php echo $row['year']; ?>" />
                                 </form>
                             </td>
                             <td>
                                 <form action="search.php" method="post">
-                                    <input type="submit" name="TakeButton" value="Mark As Taken" class="btn btn-dark" />
-                                    <input type="hidden" name="dept_taken" value ="<?php echo $row['dept_abbr']; ?>" />
-                                    <input type="hidden" name="code_taken" value ="<?php echo $row['course_code']; ?>" />
-                                    <input type="hidden" name="semester_taken" value ="<?php echo $row['semester']; ?>" />
-                                    <input type="hidden" name="year_taken" value ="<?php echo $row['year']; ?>" />
+                                    <?php if(isAlreadyTaken($row["course_code"], $row["dept_abbr"], $row["semester"], $row["year"], $coursesTaken)): ?>
+                                            <input type="submit" name="RemoveTaken" value="Unmark as Taken" class="btn btn-danger" />
+                                    <?php else: ?>
+                                            <input type="submit" name="TakeButton" value="Mark as Taken" class="btn btn-dark" />
+                                    <?php endif; ?>
+                                    <input type="hidden" name="dept_take" value ="<?php echo $row['dept_abbr']; ?>" />
+                                    <input type="hidden" name="code_take" value ="<?php echo $row['course_code']; ?>" />
+                                    <input type="hidden" name="semester_take" value ="<?php echo $row['semester']; ?>" />
+                                    <input type="hidden" name="year_take" value ="<?php echo $row['year']; ?>" />
                                 </form>
                             </td>
                         </tr>

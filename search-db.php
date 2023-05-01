@@ -8,9 +8,9 @@ function searchCourses($postVariables)
 	// define query
 
     // piece together filters
-    echo $searchText = $postVariables['searchText'];
-    echo $semesterYear = $postVariables['semesterYearFilter'];
-    echo $dept = $postVariables['deptFilter'];
+    $searchText = $postVariables['searchText'];
+    $semesterYear = $postVariables['semesterYearFilter'];
+    $dept = $postVariables['deptFilter'];
     $semester;
     $year;
 
@@ -18,25 +18,30 @@ function searchCourses($postVariables)
     $conditions = array();
 
     if (!empty($semesterYear) && $semesterYear != "Filter by Semester...") {
-        // echo $semesterYear; // looks good
         [$semester, $year] = parseSemesterYear($semesterYear);
 
-        $conditions[] = "semester = :semester";
-        $conditions[] = "year = :year";
+        $conditions[] = "Section.semester = :semester";
+        $conditions[] = "Section.year = :year";
     }
     if (!empty($searchText))
     {
         $conditions[] = "(dept_abbr LIKE :searchText OR course_code LIKE :searchText OR course_name LIKE :searchText OR description LIKE :searchText)";
     }
-    if (!empty($dept)) {
-        $conditions[] = "dept_abbr = :dept";
+    if (!empty($dept) && $dept != "Filter by Department...") {
+        $conditions[] = "Section.dept_abbr = :dept";
     }
 
     // add conditions
     if (count($conditions) > 0) {
         $query .= " WHERE " . implode(' AND ', $conditions);
-        echo $query;
     }
+
+    // take out courses already planned/taken
+    $query .= " AND " . "(Section.course_code, Section.dept_abbr, Section.semester, Section.year) NOT IN (SELECT Student_Plans_Course.course_code, Student_Plans_Course.dept_abbr, Student_Plans_Course.semester, Student_Plans_Course.year FROM Student_Plans_Course
+    LEFT JOIN Student_Takes_Course ON Student_Plans_Course.course_code = Student_Takes_Course.course_code AND Student_Plans_Course.dept_abbr = Student_Takes_Course.dept_abbr AND Student_Plans_Course.semester = Student_Takes_Course.semester AND Student_Plans_Course.year = Student_Takes_Course.year AND Student_Plans_Course.cid = Student_Takes_Course.cid WHERE Student_Plans_Course.cid = :cid
+    UNION
+    SELECT Student_Takes_Course.course_code, Student_Takes_Course.dept_abbr, Student_Takes_Course.semester, Student_Takes_Course.year FROM Student_Plans_Course
+    RIGHT JOIN Student_Takes_Course ON Student_Plans_Course.course_code = Student_Takes_Course.course_code AND Student_Plans_Course.dept_abbr = Student_Takes_Course.dept_abbr AND Student_Plans_Course.semester = Student_Takes_Course.semester AND Student_Plans_Course.year = Student_Takes_Course.year AND Student_Plans_Course.cid = Student_Takes_Course.cid WHERE Student_Takes_Course.cid = :cid)";
 
     // prepare query
 	$statement = $db->prepare($query);
@@ -44,6 +49,7 @@ function searchCourses($postVariables)
     $statement->bindValue(':semester', $semester);
     $statement->bindValue(':year', $year);
     $statement->bindValue(':dept', $dept);
+    $statement->bindValue('cid', $cid);
 	
     // execute
     $statement->execute();
@@ -120,6 +126,32 @@ function parseSemesterYear($semesterYear)
     }
 }
 
+function getCoursesPlanned($cid)
+{
+    global $db;
+
+    $query = "SELECT Student_Plans_Course.course_code, Student_Plans_Course.dept_abbr, Student_Plans_Course.semester, Student_Plans_Course.year FROM Student_Plans_Course NATURAL JOIN Course WHERE cid = :cid";
+
+    $statement = $db->prepare($query);
+    $statement->bindValue(':cid', $cid);
+    $statement->execute();
+    $data = $statement->fetchAll();
+    $statement->closeCursor();
+    return $data;
+}
+function getCoursesTaken($cid) {
+    global $db;
+
+    $query = "SELECT Student_Takes_Course.course_code, Student_Takes_Course.dept_abbr, Student_Takes_Course.semester, Student_Takes_Course.year FROM Student_Takes_Course NATURAL JOIN Course WHERE cid = :cid";
+
+    $statement = $db->prepare($query);
+    $statement->bindValue(':cid', $cid);
+    $statement->execute();
+    $data = $statement->fetchAll();
+    $statement->closeCursor();
+    return $data;
+}
+
 function getAllCourses()
 {
     global $db;
@@ -163,6 +195,54 @@ function markSectionAsTaken($cid, $dept, $course, $semester, $year)
 	$statement->bindValue(':cid', $cid);
 	$statement->bindValue(':course_code', $course);
 	$statement->bindValue(':dept_abbr', $dept);
+    $statement->bindValue(':semester', $semester);
+    $statement->bindValue(':year', $year);
+
+	$statement->execute();
+	$statement->closeCursor();
+}
+
+function isAlreadyPlanned($course_code, $dept_abbr, $semester, $year, $coursesPlanned) {
+
+    foreach($coursesPlanned as $course) {
+        if ($course["course_code"] == $course_code && $course["dept_abbr"] == $dept_abbr && $course["semester"] == $semester && $course["year"] == $year) {
+            return true;
+        }
+    }
+}
+
+function isAlreadyTaken($course_code, $dept_abbr, $semester, $year, $coursesTaken) {
+
+    foreach($coursesTaken as $course) {
+        if ($course["course_code"] == $course_code && $course["dept_abbr"] == $dept_abbr && $course["semester"] == $semester && $course["year"] == $year) {
+            return true;
+        }
+    }
+}
+
+function removeSectionFromPlanner($cid, $dept, $course, $semester, $year) {
+    global $db;
+	$query = "DELETE FROM Student_Plans_Course WHERE cid = :cid AND dept_abbr = :dept AND course_code = :course AND semester = :semester AND year = :year";
+	$statement = $db->prepare($query);
+
+	$statement->bindValue(':cid', $cid);
+	$statement->bindValue(':dept', $dept);
+    $statement->bindValue(':course', $course);
+    $statement->bindValue(':semester', $semester);
+    $statement->bindValue(':year', $year);
+
+	$statement->execute();
+	$statement->closeCursor();
+}
+
+function unmarkSectionAsTaken($cid, $dept, $course, $semester, $year) {
+    global $db;
+	$query = "DELETE FROM Student_Takes_Course WHERE cid = :cid AND dept_abbr = :dept AND course_code = :course AND semester = :semester AND year = :year";
+	$statement = $db->prepare($query);
+
+	$statement->bindValue(':cid', $cid);
+	$statement->bindValue(':dept', $dept);
+    $statement->bindValue(':course', $course);
     $statement->bindValue(':semester', $semester);
     $statement->bindValue(':year', $year);
 
