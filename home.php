@@ -30,5 +30,6 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] === false){
 		Menu <img src="http://www.shoredreams.net/wp-content/uploads/2014/02/show-menu-icon.png">
 	</div> -->
 	<?php include("navbar.php"); ?>
+	<?php header("location: planner.php") ?>
 </body>
 </html>
