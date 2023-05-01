@@ -137,7 +137,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php if($curr_year == "all"): ?>
             <h2>All Courses</h2>
         <?php elseif($curr_year < date("Y")): //definitely older?>
-            <h2>Previous Courses</h2>
+            <h2>Previously Taken Courses</h2>
         <?php else:  //need to check if current semester or in future?>
             <?php if($curr_semester == $curr_sem): ?>
                 <h2> Current Schedule </h2>
