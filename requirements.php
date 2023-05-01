@@ -1,5 +1,6 @@
 <?php 
 
+//$_SESSION["cid"]
 
 require('connect-db.php');
 
@@ -10,7 +11,9 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] === false){
   header("location: login.php"); // change from welcome.php to whatever we want our first page to be
   exit;
 }
-
+else {
+  $cid = $_SESSION["cid"];
+}
 
 require('requirements-function.php');
 
@@ -85,7 +88,7 @@ require('requirements-function.php');
 </br>
 
 <div style="text-align:center;">
-<h3>Requirements<h3>
+<h3>Degree Requirements Progress <h3>
 </div>
 
 </br>
@@ -116,7 +119,6 @@ $completed_requirements = coursesCompleteRequirements($current_user['major_name'
 
 
 
-<body>
 
 
 
@@ -157,9 +159,9 @@ $result = ($y / $x) * 100;
 
 
 
-<div class="w3-light-grey w3-xlarge">
+<!-- <div class="w3-light-grey w3-xlarge">
   <div class="w3-container w3-green" style="width:25%"> 50% </div>
-</div>
+</div> -->
 
 </br>
 </br>
@@ -266,8 +268,9 @@ $result = ($y / $x) * 100;
       <tr class="table-success">
         <td class = "tables-success"><?php echo $req['requirement_name']; ?></td>
         <td><?php echo $req['num_required'] - $x; ?></td>
-        <td><?php echo $d .=$z; ?></td>
-        <td><?php echo $m .=$n; ?></td>
+        <td><?php echo $d;?> <?php echo " ";?> <?php echo $z; ?></td>
+        
+        <td><?php echo $m;?> <?php echo " ";?><?php echo $n; ?></td>
      
       </tr>
   
