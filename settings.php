@@ -1,26 +1,119 @@
 <?php
 require_once "connect-db.php";
 require("settings_db.php");
-
 session_start();
-
 $profileFname;
 $profileLname;
-//$user_major;
-
+//check user logged in
 if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true)
 {
     $cid = $_SESSION["cid"];
     $profileFname = getFname($cid)['first_name'];
-   // echo $profileFname;
-    $profileLname = getLname($cid)['last_name'];
-
-    
-   // echo $profileLname;
-    
+    $profileLname = getLname($cid)['last_name'];  
+}
+else {
+  header("Location: login.php");
+  exit;
 }
 
+//handle forms
+if($_SERVER["REQUEST_METHOD"] == "POST") {
+  if (isset($_POST["logout"])) {
+    // unset session variables
+    $_SESSION["cid"] = null;
+    $_SESSION["loggedin"] = false;
+    // redirect to login page
+    header("Location: login.php");
+    exit;
+  }
 
+
+//   if(isset($_POST["savechanges"])) {
+//     if(isset($_POST["major"])) {
+//         $new_primary_major = trim($_POST["major"]);
+//         $new_primary_concentration = trim($_POST["concentration"]);
+//         if($new_primary_major != "") {
+//             if($first_major != "") {
+//                 //need to UPDATE primary major
+//                 updatePrimaryMajor($cid, $new_primary_major, $new_primary_concentration);
+//             } else {
+//                 //need to INSERT primary major for first time
+//                 insertPrimaryMajor($cid, $new_primary_major, $new_primary_concentration);
+//             }
+//         } else {
+//             echo "Please insert a primary major";
+//         }
+//     }
+//     if(isset($_POST["major2"])) {
+//         $new_second_major = trim($_POST["major2"]);
+//         $new_second_concentration = trim($_POST["concentration2"]);
+//         if($new_second_major != "") {
+//             if($second_major != "") {
+//                 //need to UPDATE second major
+//                 updateSecondMajor($cid, $new_second_major, $new_second_concentration);
+//             } else {
+//                 //need to INSERT second major for first time
+//                 insertSecondMajor($cid, $new_second_major, $new_second_concentration);
+//             }
+//         } else {
+//             echo "Please insert a second major";
+//         }
+//     }
+// }
+
+  
+  // if(isset($_POST["savechanges"])) {
+  //     if(isset($_POST["major"])) {
+  //       $new_primary_major = trim($_POST["major"]);
+  //       $new_primary_concentration = trim($_POST["concentration"]);
+  //       if($first_major != "") {
+  //         //need to UPDATE major
+
+
+  //         //updatePrimaryMajor();
+  //       }
+  //       else {
+  //         //need to INSERT major for first time
+
+  //         //insertPrimaryMajor();
+  //       }
+  //     }
+  //     if(isset($_POST["major2"])) {
+  //       if($second_major != "") {
+  //         //need to UPDATE major
+
+  //         //updateSecondMajor();
+  //       }
+  //       else {
+  //         //need to INSERT major for first time
+  //         //insertSecondMajor();
+  //       }
+  //     }
+  //     //updateMajor($cid, $major_name, $concentration);
+  // }
+}
+
+//majors for dropdown
+$major_names = getMajor();
+
+//current user's majors
+$first_major = $second_major = "none";
+
+$first_major = getPrimaryMajor($cid);
+if($first_major != null) {
+  $first_major = $first_major["major_name"];
+}
+else {
+  $first_major = "";
+}
+
+$second_major = getSecondMajor($cid);
+if($second_major != null) {
+  $second_major = $second_major["major_name"];
+}
+else {
+  $second_major = "";
+}
 ?>
 
 <!DOCTYPE html>
@@ -36,105 +129,58 @@ if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true)
 </head>
 
 <body>
-  
 <?php include('navbar.php'); ?>
   <h1>Your Profile</h1>
 <div class="profile-input-field">
         <h3>Keep your profile up-to-date!</h3>
-        <form method="post" action=""<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>"" >
+        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" >
           <div class="form-group">
             <label>First Name</label>
-    
-            <input type="text" class="form-control" name="fname" style="width:20em;" placeholder="<?php echo $profileFname; ?>" value="<?php echo $row['first_name']; ?>" required />
+            <input type="text" class="form-control" name="fname" style="width:20em;" value="<?php echo $profileFname; ?>" required />
           </div>
+
           <div class="form-group">
             <label>Last Name</label>
-            <input type="text" class="form-control" name="lname" style="width:20em;" placeholder="<?php echo $profileLname; ?>" value="<?php echo $row['last_name']; ?>" required />
-
+            <input type="text" class="form-control" name="lname" style="width:20em;" value="<?php echo $profileLname; ?>" required />
           </div>
           <div class="form-group">
-            <label>Major</label>
-            <input type="text" class="form-control" name="major" style="width:20em;" placeholder="Add your major" required value="<?php echo $row['major']; ?>" />
+            <label> Add Primary Major: </label>
+              <select name="major" id="major" required>
+                <option value="select"> Select... </option>
+                <option value="none"> None </option>
+              <?php foreach ($major_names as $major_name): ?>
+            <option value=<?php echo $major_name['major_name']; if ($first_major == $major_name['major_name']) { ?> selected=true <?php }; ?>><?php echo $major_name['major_name']; ?></option>
+          <?php endforeach; ?>
+              </select>
+              </div>
+              <div class="form-group">
+            <label>Concentration</label>
+            <input type="text" class="form-control" name="concentration" style="width:20em;" placeholder= "Add your concentration" value=" <?php echo $row['concentration']; ?> "/>
           </div>
-          <p>
-                <select name="Major">
-                    <option value="">Select...</option>
-                    <option value="">Architectural History</option>
-                    <option value="">Architecture</option>
-                    <option value="">Archaelogy</option>
-                    <option value="">Urban and Environmental Planning</option>
-                    <option value="">Dance</option>
-                    <option value="">Drama</option>
-                    <option value="">Studio Art</option>
-                    <option value="">Biology</option>
-                    <option value="">Cognitive Science</option>
-                    <option value="">Human Biology</option>
-                    <option value="">Neuroscience</option>
-                    <option value="">Biomedical Engineering</option>
-                    <option value="">Chemistry</option>
-                    <option value="">Classics</option>
-                    <option value="">Chemical Engineering</option>
-                    <option value="">Commerce</option>
-                    <option value="">Computer Science (B.A.)</option>
-                    <option value="">Computer Science (B.S.)</option>
-                    <option value="">Environmental Sciences</option>
-                    <option value="">Computer Engineering</option>
-                    <option value="">Electrical Engineering</option>
-                    <option value="">Early Childhood Education</option>
-                    <option value="">Elementary Education</option>
-                    <option value="">Kinesiology</option>
-                </select>
-             </p>
-             <div class="form-group">
-            <label> Second Major</label>
-            <input type="text" class="form-control" name="major" style="width:20em;" placeholder="Add your major" required value="<?php echo $row['major']; ?>" />
-          </div>
-          <p>
-                <select name="Major">
-                    <option value="">Select...</option>
-                    <option value="">Architectural History</option>
-                    <option value="">Architecture</option>
-                    <option value="">Archaelogy</option>
-                    <option value="">Urban and Environmental Planning</option>
-                    <option value="">Dance</option>
-                    <option value="">Drama</option>
-                    <option value="">Studio Art</option>
-                    <option value="">Biology</option>
-                    <option value="">Cognitive Science</option>
-                    <option value="">Human Biology</option>
-                    <option value="">Neuroscience</option>
-                    <option value="">Biomedical Engineering</option>
-                    <option value="">Chemistry</option>
-                    <option value="">Classics</option>
-                    <option value="">Chemical Engineering</option>
-                    <option value="">Commerce</option>
-                    <option value="">Computer Science (B.A.)</option>
-                    <option value="">Computer Science (B.S.)</option>
-                    <option value="">Environmental Sciences</option>
-                    <option value="">Computer Engineering</option>
-                    <option value="">Electrical Engineering</option>
-                    <option value="">Early Childhood Education</option>
-                    <option value="">Elementary Education</option>
-                    <option value="">Kinesiology</option>
-                </select>
-             </p>
+          
+            <div class="form-group">
+            <label for="major2">Add Second Major:</label>
+<select name="major2" id="major2" required>    
+                <option value="select"> Select... </option>
+                <option value="none"> None </option>
+            <?php foreach ($major_names as $major_name): ?>
+            <option value=<?php echo $major_name['major_name']; if($second_major == $major_name['major_name']) { ?> selected=true <?php }; ?>><?php echo $major_name['major_name']; ?></option>
+          <?php endforeach; ?>
+        </select>
+            </div>
           <div class="form-group">
             <label>Concentration</label>
-            <input type="text" class="form-control" name="concentration" style="width:20em;" placeholder="Add your concentration" value=" <?php echo $row['concentration']; ?> "/>
+            <input type="text" class="form-control" name="concentration2" style="width:20em;" placeholder= "Add your concentration" value=" <?php echo $row['concentration2']; ?> "/>
           </div>
-            <p>
-                <select name="Concentration">
-                    <option value="">Select...</option>
-                </select>
-             </p>
           <div class="form-group">
-                <input type="save" class="btn btn-primary" value="Save Changes">
+                <input type="submit" class="btn btn-primary" value="Save Changes", name="savechanges">
                 <input type="cancel" class="btn btn-secondary ml-2" value="Cancel">
             </div>
+          <div class="form-group">
+          <input type="submit" class="btn btn-primary" value="Sign Out" name="logout">
+          </div>
         </form>
     </div>
 </body>
 </html>
-
-
 
