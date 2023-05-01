@@ -32,10 +32,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 $major_names = getMajor();
 
 //current user's majors
-$first_major = $second_major = "none";
+$first_concentration = $second_concentration = "";
 
 $first_major = getPrimaryMajor($cid);
 if($first_major != null) {
+  $first_concentration = $first_major['concentration'];
   $first_major = $first_major["major_name"];
 }
 else {
@@ -44,6 +45,7 @@ else {
 
 $second_major = getSecondMajor($cid);
 if($second_major != null) {
+  $second_concentration = $second_major['concentration'];
   $second_major = $second_major["major_name"];
 }
 else {
@@ -90,7 +92,7 @@ else {
               </div>
               <div class="form-group">
             <label>Concentration</label>
-            <input type="text" class="form-control" name="concentration" style="width:20em;" placeholder= "Add your concentration" value=" <?php echo $row['concentration']; ?> "/>
+            <input type="text" class="form-control" name="concentration" style="width:20em;" placeholder= "Add your concentration" value="<?php echo $first_concentration ?>"/>
           </div>
           
             <div class="form-group">
@@ -105,7 +107,7 @@ else {
             </div>
           <div class="form-group">
             <label>Concentration</label>
-            <input type="text" class="form-control" name="concentration2" style="width:20em;" placeholder= "Add your concentration" value=" <?php echo $row['concentration2']; ?> "/>
+            <input type="text" class="form-control" name="concentration2" style="width:20em;" placeholder= "Add your concentration" value="<?php echo $second_concentration; ?>"/>
           </div>
           <div class="form-group">
                 <input type="submit" class="btn btn-primary" value="Save Changes", name="savechanges">
