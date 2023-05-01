@@ -17,16 +17,20 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
     $coursesPlanned = getCoursesPlanned($_SESSION['cid']);
     $coursesTaken = getCoursesTaken($_SESSION['cid']);
 }
+else {
+    header("Location: login.php");
+    exit;
+}
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
-    if (!empty($_POST['searchBtn']) && ($_POST['searchBtn'] == "Search") && isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true)
+    if (!empty($_POST['searchBtn']) && ($_POST['searchBtn'] == "Search"))
     {
         $postVariables = $_POST;
         $cid = $_SESSION["cid"];
         $searchResults = searchCourses($postVariables, $cid);
     }
-    if (!empty($_POST['PlannerButton']) && isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true)
+    if (!empty($_POST['PlannerButton']))
     {
         $cid = $_SESSION["cid"];
         $dept = $_POST['dept_plan'];
@@ -39,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         $coursesTaken = getCoursesTaken($_SESSION['cid']);
         $searchResults = getAllCourses();
     }
-    if (!empty($_POST['TakeButton']) && isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true)
+    if (!empty($_POST['TakeButton']))
     {
         $cid = $_SESSION["cid"];
         $dept = $_POST['dept_take'];
@@ -52,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         $coursesTaken = getCoursesTaken($_SESSION['cid']);
         $searchResults = getAllCourses();
     }
-    if (!empty($_POST['RemovePlanner']) && isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
+    if (!empty($_POST['RemovePlanner'])) {
         $cid = $_SESSION["cid"];
         $dept = $_POST['dept_plan'];
         $course = $_POST['code_plan'];
@@ -64,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         $coursesTaken = getCoursesTaken($_SESSION['cid']);
         $searchResults = getAllCourses();
     }
-    if (!empty($_POST['RemoveTaken']) && isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
+    if (!empty($_POST['RemoveTaken'])) {
         $cid = $_SESSION["cid"];
         $dept = $_POST['dept_take'];
         $course = $_POST['code_take'];
@@ -89,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 </head>
 <body>
-    <?php include('home.php');?>
+    <?php include('navbar.php');?>
     <div class="container">
         <br/>
         <div class="row justify-content-center">

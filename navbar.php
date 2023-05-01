@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
             <div class="navbar-brand">
-                <a class="navbar-brand" href="home.php">UVA Student Course Planner</a>
+                <a class="navbar-brand" href="planner.php">UVA Student Course Planner</a>
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav mr-auto">
