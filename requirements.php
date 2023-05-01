@@ -54,7 +54,7 @@ require('requirements-function.php');
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active"><a class="nav-link" href="#">My Planner</a></li>
+                    <li class="nav-item active"><a class="nav-link" href="planner.php">My Planner</a></li>
                     <li class="nav-item"><a class="nav-link" href="/databases-pr/requirements.php">Degree Requirements</a></li>
                     <li class="nav-item"><a class="nav-link" href="search.php">Search Courses</a></li>
                 </ul>
@@ -105,11 +105,12 @@ require('requirements-function.php');
 
 
 
-<?php $current_user = findMajorByUser("ht6xd"); 
+<?php $current_user = findMajorByUser($_SESSION["cid"]); 
+
 
 $major_requirements = displayRequirements($current_user['major_name']); 
 
-$completed_requirements = coursesCompleteRequirements($current_user['major_name'], "ht6xd");
+$completed_requirements = coursesCompleteRequirements($current_user['major_name'],$_SESSION["cid"]);
 
 
 
@@ -185,8 +186,8 @@ $result = ($y / $x) * 100;
   <?php foreach ($major_requirements as $req): ?>
     
       <tr class="table-success">
-        <td class = "tables-success"><?php echo $req['requirement_name']; ?></td>
-        <td><?php echo $req['num_required']; ?></td>
+        <td class = "tables-success"><?php echo $req['requirement_name']; ?> </br></td>
+        <td><?php echo $req['num_required']; ?></br></td>
      
       </tr>
   
@@ -202,7 +203,7 @@ $result = ($y / $x) * 100;
   </br>
   </br>
 
-<?php $completed_requirements = coursesCompleteRequirements($current_user['major_name'], "ht6xd"); ?>
+<?php $completed_requirements = coursesCompleteRequirements($current_user['major_name'], $_SESSION["cid"]); ?>
 
 
 <table class="w3-table w3-bordered w3-card-4 center" style="width:100%">
@@ -231,9 +232,9 @@ $result = ($y / $x) * 100;
     
     $x = 0;
 
-    $h = classes($current_user['major_name'], "ht6xd", $req['requirement_name']); 
+    $h = classes($current_user['major_name'], $_SESSION["cid"], $req['requirement_name']); 
 
-    $a = countDifference($current_user['major_name'], "ht6xd", $req['requirement_name']); 
+    $a = countDifference($current_user['major_name'], $_SESSION["cid"], $req['requirement_name']); 
 
 
     $m = "";
@@ -308,6 +309,37 @@ and the requirements that need to be met -->
 <br/>
 
 
+<table class="w3-table w3-bordered w3-card-4 center" style="width:100%">
+
+
+  <thead>
+    <th> You have taken these classes: </th>
+    <tr style="background-color:#DCEDC8">
+      <th scope="col">Department Acronymn and Class Code</th>
+      
+    </tr>
+  </thead>
+
+
+  <tbody>
+
+
+  <?php 
+
+  $taken = takenCourses($_SESSION["cid"]);
+  
+  foreach ($taken as $s): ?>
+    
+      <tr class="table-success">
+        <td class = "tables-success"><?php echo $s['dept_abbr']; ?> <?php echo " "; ?> <?php echo $s['course_code']; ?></br></td>
+     
+      </tr>
+  
+  <?php endforeach; ?>
+   
+    </tr>
+  </tbody>
+</table>
 
 
 
@@ -325,7 +357,6 @@ and the requirements that need to be met -->
 
 
 
-$major_requirements = displayRequirements($current_user['major_name']); 
 
 //find difference in requirements
 

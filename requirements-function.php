@@ -255,6 +255,34 @@ function classes($major, $cid, $r_name)
 
 }
 
+function takenCourses($cid)
+{
+
+    global $db;
+
+
+    $query = "SELECT dept_abbr, course_code FROM Student_Takes_Course WHERE cid = :cid";
+	
+    //GROUP BY requirement_name HAVING major_name = :major AND requirement_name = :r_name";
+
+
+    $statement = $db->prepare($query);
+
+
+	$statement->bindValue(':cid', $cid);
+
+
+    $statement->execute();
+
+    $results = $statement->fetchAll();
+
+    $statement->closecursor();
+
+    return $results;
+
+
+}
+
 
 
 
