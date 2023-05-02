@@ -156,7 +156,7 @@ function getAllCourses()
     global $db;
 	// define query
 	$query = "SELECT * FROM Course NATURAL JOIN Section GROUP BY course_code, dept_abbr, semester, year";
-    $query .= " ORDER BY Section.dept_abbr";
+    $query .= " ORDER BY year DESC, semester, Section.dept_abbr, course_code";
 	// prepare query
 	$statement = $db->prepare($query);
 	// execute

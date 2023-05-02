@@ -18,7 +18,9 @@ else {
 $years = getYears($cid);
 $semesters = getSems($cid);
 
-$courses = getCourses($cid);
+// $courses = getCourses($cid);
+$planned_courses = getPlannedCourses($cid);
+$taken_courses = getTakenCourses($cid);
 
 $curr_year = "all";
 $curr_sem = "all";
@@ -51,18 +53,45 @@ else {
 }
 
 if($_SERVER["REQUEST_METHOD"] == "POST") {
-    if($_POST["year"] == "all") {
-        $na = true;
-        $curr_sem = "na";
-        $courses = getCourses($cid);
-    }
-    else {
-        $na = false;
-        $curr_sem = $_POST["sem"];
+
+    if(isset($_POST["year"])) {
+        if($_POST["year"] == "all") {
+            $na = true;
+            $curr_sem = "na";
+            // $courses = getCourses($cid);
+            $planned_courses = getPlannedCourses($cid);
+            $taken_courses = getTakenCourses($cid);
+        }
+        else {
+            $na = false;
+            $curr_sem = $_POST["sem"];
+            $curr_year = $_POST["year"];
+            // $courses = getCoursesSemYear($cid, $curr_sem, $curr_year);
+            $planned_courses = getPlannedCoursesSemYear($cid, $curr_sem, $curr_year);
+            $taken_courses = getTakenCoursesSemYear($cid, $curr_sem, $curr_year);
+        }
         $curr_year = $_POST["year"];
-        $courses = getCoursesSemYear($cid, $curr_sem, $curr_year);
     }
-    $curr_year = $_POST["year"];
+
+    if(isset($_POST["TakenDelete"])) {
+        deleteTaken($cid, $_POST["course_code"], $_POST["dept_abbr"]);
+        if($_POST["year"] == "all") {
+            $taken_courses = getTakenCourses($cid);
+        }
+        else {
+            $taken_courses = getTakenCoursesSemYear($cid, $_POST['sem'], $_POST['year']);
+        }
+    }
+
+    elseif(isset($_POST["PlannerDelete"])) {
+        deletePlanner($cid, $_POST["course_code"], $_POST["dept_abbr"]);
+        if($_POST['year'] == "all") {
+            $planned_courses = getPlannedCourses($cid);
+        }
+        else {
+            $planned_courses = getPlannedCoursesSemYear($cid, $_POST['sem'], $_POST['year']);
+        }
+    }
 }
 // var_dump($curr_sem);
 ?>
@@ -137,16 +166,18 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php if($curr_year == "all"): ?>
             <h2>All Courses</h2>
         <?php elseif($curr_year < date("Y")): //definitely older?>
-            <h2>Previously Taken Courses</h2>
+            <h2>Previous Courses</h2>
         <?php else:  //need to check if current semester or in future?>
             <?php if($curr_semester == $curr_sem): ?>
-                <h2> Current Schedule </h2>
+                <h2> Current Semester </h2>
             <?php else: ?>
                 <h2>Planned Courses</h2>
             <?php endif; ?>
         <?php endif; ?>
         <!-- Display list of planned/previously taken courses based on selected year/sem -->
         <!-- If "all" courses, print ordered by year -->
+        <h3> Enrolled </h3>
+        <?php if (count($taken_courses) > 0): //check if taken classes for this semester ?>
         <div class="col-md-9"> 
             <table class="table table-list-search">
                 <thead>
@@ -158,17 +189,69 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                         <th>Year</th>
                     </tr>
                 </thead>
-                <?php foreach($courses as $row): ?>
+                <?php foreach($taken_courses as $row): ?>
                     <tr>
                         <td><?php echo $row['dept_abbr']; ?></td>
                         <td><?php echo $row['course_code']; ?></td>
                         <td><?php echo $row['course_name']; ?></td>
                         <td><?php echo $row['semester']; ?></td>
                         <td><?php echo $row['year']; ?></td>
+                        <td>
+                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                                <input type="submit" name="TakenDelete" value="remove" class="btn-danger" style="width:6.5em; height:2.3em;" />
+                                <input type="hidden" name="dept_abbr" value ="<?php echo $row['dept_abbr']; ?>" />
+                                <input type="hidden" name="course_code" value ="<?php echo $row['course_code']; ?>" />
+                                <input type="hidden" name="year" value = <?php echo $curr_year; ?> />
+                                <input type="hidden" name="sem" value = <?php echo $curr_sem; ?> />
+                            </form>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </table>
         </div>
+        <?php 
+            else:
+                echo "<p> No courses enrolled this semester";
+            endif; 
+        ?>
+        <h3> Planned </h3>
+        <?php if (count($planned_courses) > 0): ?>
+            <div class="col-md-9"> 
+                <table class="table table-list-search">
+                    <thead>
+                        <tr>
+                            <th>Dept</th>
+                            <th>Course</th>
+                            <th>Name</th>
+                            <th>Semester</th>
+                            <th>Year</th>
+                        </tr>
+                    </thead>
+                    <?php foreach($planned_courses as $row): ?>
+                        <tr>
+                            <td><?php echo $row['dept_abbr']; ?></td>
+                            <td><?php echo $row['course_code']; ?></td>
+                            <td><?php echo $row['course_name']; ?></td>
+                            <td><?php echo $row['semester']; ?></td>
+                            <td><?php echo $row['year']; ?></td>
+                            <td>
+                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                                <input type="submit" name="PlannerDelete" value="remove" class=" btn-danger" style="width:6.5em; height:2.3em;" />
+                                <input type="hidden" name="dept_abbr" value ="<?php echo $row['dept_abbr']; ?>" />
+                                <input type="hidden" name="course_code" value ="<?php echo $row['course_code']; ?>" />
+                                <input type="hidden" name="year" value = <?php echo $curr_year; ?> />
+                                <input type="hidden" name="sem" value = <?php echo $curr_sem; ?> />
+                            </form>
+                        </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
+            </div>
+        <?php 
+            else:
+                echo "<p> No courses planned for this semester";
+            endif; 
+        ?>
     </div>
 </body>
 </html>
