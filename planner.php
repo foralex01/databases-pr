@@ -53,22 +53,45 @@ else {
 }
 
 if($_SERVER["REQUEST_METHOD"] == "POST") {
-    if($_POST["year"] == "all") {
-        $na = true;
-        $curr_sem = "na";
-        // $courses = getCourses($cid);
-        $planned_courses = getPlannedCourses($cid);
-        $taken_courses = getTakenCourses($cid);
-    }
-    else {
-        $na = false;
-        $curr_sem = $_POST["sem"];
+
+    if(isset($_POST["year"])) {
+        if($_POST["year"] == "all") {
+            $na = true;
+            $curr_sem = "na";
+            // $courses = getCourses($cid);
+            $planned_courses = getPlannedCourses($cid);
+            $taken_courses = getTakenCourses($cid);
+        }
+        else {
+            $na = false;
+            $curr_sem = $_POST["sem"];
+            $curr_year = $_POST["year"];
+            // $courses = getCoursesSemYear($cid, $curr_sem, $curr_year);
+            $planned_courses = getPlannedCoursesSemYear($cid, $curr_sem, $curr_year);
+            $taken_courses = getTakenCoursesSemYear($cid, $curr_sem, $curr_year);
+        }
         $curr_year = $_POST["year"];
-        // $courses = getCoursesSemYear($cid, $curr_sem, $curr_year);
-        $planned_courses = getPlannedCoursesSemYear($cid, $curr_sem, $curr_year);
-        $taken_courses = getTakenCoursesSemYear($cid, $curr_sem, $curr_year);
     }
-    $curr_year = $_POST["year"];
+
+    if(isset($_POST["TakenDelete"])) {
+        deleteTaken($cid, $_POST["course_code"], $_POST["dept_abbr"]);
+        if($_POST["year"] == "all") {
+            $taken_courses = getTakenCourses($cid);
+        }
+        else {
+            $taken_courses = getTakenCoursesSemYear($cid, $_POST['sem'], $_POST['year']);
+        }
+    }
+
+    elseif(isset($_POST["PlannerDelete"])) {
+        deletePlanner($cid, $_POST["course_code"], $_POST["dept_abbr"]);
+        if($_POST['year'] == "all") {
+            $planned_courses = getPlannedCourses($cid);
+        }
+        else {
+            $planned_courses = getPlannedCoursesSemYear($cid, $_POST['sem'], $_POST['year']);
+        }
+    }
 }
 // var_dump($curr_sem);
 ?>
@@ -173,6 +196,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                         <td><?php echo $row['course_name']; ?></td>
                         <td><?php echo $row['semester']; ?></td>
                         <td><?php echo $row['year']; ?></td>
+                        <td>
+                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                                <input type="submit" name="TakenDelete" value="remove" class="btn-danger" style="width:6.5em; height:2.3em;" />
+                                <input type="hidden" name="dept_abbr" value ="<?php echo $row['dept_abbr']; ?>" />
+                                <input type="hidden" name="course_code" value ="<?php echo $row['course_code']; ?>" />
+                                <input type="hidden" name="year" value = <?php echo $curr_year; ?> />
+                                <input type="hidden" name="sem" value = <?php echo $curr_sem; ?> />
+                            </form>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </table>
@@ -202,6 +234,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                             <td><?php echo $row['course_name']; ?></td>
                             <td><?php echo $row['semester']; ?></td>
                             <td><?php echo $row['year']; ?></td>
+                            <td>
+                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                                <input type="submit" name="PlannerDelete" value="remove" class=" btn-danger" style="width:6.5em; height:2.3em;" />
+                                <input type="hidden" name="dept_abbr" value ="<?php echo $row['dept_abbr']; ?>" />
+                                <input type="hidden" name="course_code" value ="<?php echo $row['course_code']; ?>" />
+                                <input type="hidden" name="year" value = <?php echo $curr_year; ?> />
+                                <input type="hidden" name="sem" value = <?php echo $curr_sem; ?> />
+                            </form>
+                        </td>
                         </tr>
                     <?php endforeach; ?>
                 </table>

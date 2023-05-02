@@ -169,5 +169,31 @@ function getTakenCoursesSemYear($cid, $sem, $year) {
     return $rows;
 }
 
+function deletePlanner($cid, $course_code, $dept_abbr) {
+    global $db;
+    $query = "DELETE FROM Student_Plans_Course WHERE cid = :cid AND dept_abbr = :dept AND course_code = :course";
+    $stmt = $db->prepare($query);
+
+	$stmt->bindValue(':cid', $cid);
+	$stmt->bindValue(':dept', $dept_abbr);
+    $stmt->bindValue(':course', $course_code);
+
+    $stmt->execute();
+    unset($stmt);
+}
+
+function deleteTaken($cid, $course_code, $dept_abbr) {
+    global $db;
+    $query = "DELETE FROM Student_Takes_Course WHERE cid = :cid AND dept_abbr = :dept AND course_code = :course";
+    $stmt = $db->prepare($query);
+
+	$stmt->bindValue(':cid', $cid);
+	$stmt->bindValue(':dept', $dept_abbr);
+    $stmt->bindValue(':course', $course_code);
+
+    $stmt->execute();
+    unset($stmt);
+}
+
 ?>
 
