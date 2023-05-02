@@ -3,18 +3,14 @@ CS 4750 Group Project
 
 TODO:
 
-1. Planner Page (Henry)
-  a. Separate planner and schedule in planner page
-  b. sort years in planner dropdown
-  c. add button to remove from planner/schedule on planner page
-2. Triggers/Logging (Matt?)
+1. Triggers/Logging (Matt?)
   a. fix triggers to not break adding/removing to planner/schedule and test that they add logs to log table
-3. Requirements Page (Alex?)
-  a. Add a table for second major requirements
+2. Requirements Page (Alex?)
+  a. --Add a table for second major requirements--
   b. add more data (choose one major to have at least one or two courses fulfill each requirement so we can demo!)
-4. (Optional) Styling (Rebecca?)
+3. (Optional) Styling
   a. Add coloring/UVA styling to make website look better
-7. (Optional) GCP Hosting (for extra credit and to fix DB-level security)
+4. (Optional) GCP Hosting (for extra credit and to fix DB-level security)
 
 
 Requirements:
