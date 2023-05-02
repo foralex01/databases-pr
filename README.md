@@ -2,19 +2,14 @@
 CS 4750 Group Project
 
 TODO:
-1. DB-level security  (HOW DO WE DO THIS ON CS SERVER??)
-    -perms for the app users (setup User perms for site connection)
-    -users should be able to view everything, add/delete/update their name, major, planned/taken courses
-2. CHECKS/TRIGGERS (Adv. SQL)
-3. Add Planner data
-4. Bootstrap for settings page
-5. Finish report
-    -fix ER diagrams
-    -make sure table headings are up-to-date!
-    -see https://www.cs.virginia.edu/~up3f/cs4750/project/index.html#!/finalprj for rest of info!
-6. Test concurrent users by opening site in multiple tabs
-7. (Optional) GCP Hosting (for extra credit and to fix DB-level security)
-8. Peer-eval!!
+
+1. Separate planner and schedule in planner page
+2. sort years in planner dropdown
+3. add button to remove from planner/schedule on planner page
+4. adjust how searching works (potentially)
+5. Test concurrency?
+6. (Optional) GCP Hosting (for extra credit and to fix DB-level security)
+7. Peer-evals!!
 
 Completed:
 1. Login/Logout Register
@@ -24,3 +19,7 @@ Completed:
 5. Planner
 6. Update SQL (update majors)
 7. Delete (delete from Plans/Takes)
+8. DB-level security via trigger logging
+9. Adv SQL: checks on years added to Student_Takes_Course and triggers for <=5 courses a semester
+10. Bootstrap/layout of all pages
+11. Report done!
