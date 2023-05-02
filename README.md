@@ -3,23 +3,33 @@ CS 4750 Group Project
 
 TODO:
 
-1. Separate planner and schedule in planner page
-2. sort years in planner dropdown
-3. add button to remove from planner/schedule on planner page
-4. adjust how searching works (potentially)
-5. Test concurrency?
-6. (Optional) GCP Hosting (for extra credit and to fix DB-level security)
-7. Peer-evals!!
+1. Planner Page (Henry)
+  a. Separate planner and schedule in planner page
+  b. sort years in planner dropdown
+  c. add button to remove from planner/schedule on planner page
+2. Triggers/Logging (Matt?)
+  a. fix triggers to not break adding/removing to planner/schedule and test that they add logs to log table
+3. Requirements Page (Alex?)
+  a. Add a table for second major requirements
+  b. add more data (choose one major to have at least one or two courses fulfill each requirement so we can demo!)
+4. (Optional) Styling (Rebecca?)
+  a. Add coloring/UVA styling to make website look better
+7. (Optional) GCP Hosting (for extra credit and to fix DB-level security)
 
-Completed:
-1. Login/Logout Register
-2. App level security (password hashing, redirection, HTML special character handling)
-3. Course search/filter
-4. Logout button
-5. Planner
-6. Update SQL (update majors)
-7. Delete (delete from Plans/Takes)
-8. DB-level security via trigger logging
-9. Adv SQL: checks on years added to Student_Takes_Course and triggers for <=5 courses a semester
-10. Bootstrap/layout of all pages
-11. Report done!
+
+Requirements:
+(done )1. Use >= 10 (normalized) tables
+(done) 2. Fulfills our proposed project (retrieves classes, adds to planner, updates planner/major info, remove from planner, filter courses)
+(partially complete) 3. Dynamic behaviors: searching/filtering, dropdown filters on planner for semester/year, (requirements updating after fulfilling courses added ??)
+(done) 4. Functionalities
+  a. Retrieve (course info, name, major info, requirements)
+  b. Add (to planner, major info)
+  c. Update (major info)
+  d. Delete (planner info)
+  e. Search (courses)
+  f. Filter (courses + planner)
+(done) 6. Support multiple users (no conflicted operations!)
+(done) 7. Allow Returning users (Login/Logout, Register, data fetched for planner and requirements is per user)
+8. Security
+  (done) a. App level security (password hashing, redirection, HTML special character handling)
+  (incomplete!) b. DB level security: NEED TO FIX TRIGGERS
