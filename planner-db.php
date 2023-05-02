@@ -3,7 +3,18 @@
 //TODO: add functions for interacting with the DB
 function getYears($cid) {
     global $db;
-    $query = "(SELECT year FROM Student_Takes_Course WHERE year IS NOT NULL AND cid=:cid) UNION (SELECT year FROM Student_Plans_Course WHERE year IS NOT NULL AND cid=:cid)";
+    $query = "SELECT year FROM\n"
+
+    . "(SELECT `year` FROM `Student_Takes_Course`\n"
+
+    . "UNION\n"
+
+    . "SELECT `year` FROM `Student_Plans_Course`) as T\n"
+
+    . "WHERE year IS NOT NULL\n"
+
+    . "ORDER BY year DESC;";
+    // "(SELECT year FROM Student_Takes_Course WHERE year IS NOT NULL AND cid=:cid) UNION (SELECT year FROM Student_Plans_Course WHERE year IS NOT NULL AND cid=:cid)";
     if($stmt = $db->prepare($query)) {
         $stmt->bindValue(":cid", $cid);
         if($stmt->execute()) {
