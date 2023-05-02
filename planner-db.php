@@ -40,7 +40,42 @@ function getCourses($cid) {
     global $db;
     $query = "(SELECT dept_abbr, course_name, course_code, year, semester FROM Student_Plans_Course NATURAL JOIN Course WHERE cid = :cid UNION
     SELECT dept_abbr, course_name, course_code, year, semester FROM Student_Takes_Course NATURAL JOIN Course WHERE cid = :cid)
-    ORDER BY year DESC, semester";
+    ORDER BY year DESC, semester, dept_abbr, course_code";
+    $stmt = $db->prepare($query);
+
+    //Set cid
+    $stmt->bindValue(":cid", $cid);
+
+    //execute
+    $stmt->execute();
+    $rows = $stmt->fetchAll();
+    
+    //cleanup and return rows
+    unset($stmt);
+    return $rows;
+}
+
+//like above, but only planned courses
+function getPlannedCourses($cid) {
+    global $db;
+    $query = "SELECT dept_abbr, course_name, course_code, year, semester FROM Student_Plans_Course NATURAL JOIN Course WHERE cid = :cid ORDER BY year DESC, semester, dept_abbr, course_code";
+    $stmt = $db->prepare($query);
+
+    //Set cid
+    $stmt->bindValue(":cid", $cid);
+
+    //execute
+    $stmt->execute();
+    $rows = $stmt->fetchAll();
+    
+    //cleanup and return rows
+    unset($stmt);
+    return $rows;
+}
+
+function getTakenCourses($cid) {
+    global $db;
+    $query = "SELECT dept_abbr, course_name, course_code, year, semester FROM Student_Takes_Course NATURAL JOIN Course WHERE cid = :cid ORDER BY year DESC, semester, dept_abbr, course_code";
     $stmt = $db->prepare($query);
 
     //Set cid
@@ -64,6 +99,49 @@ function getCoursesSemYear($cid, $sem, $year) {
     $query .= " SELECT dept_abbr, course_name, course_code, year, semester FROM Student_Takes_Course NATURAL JOIN Course WHERE cid=:cid)";
     $query .= " SELECT * FROM T";
     $query .= " WHERE semester = :sem AND year=:year";
+    $query .= " ORDER BY dept_abbr, course_code";
+    $stmt = $db->prepare($query);
+
+    //Set cid
+    $stmt->bindValue(":cid", $cid);
+    $stmt->bindValue(":sem", $sem);
+    $stmt->bindValue(":year", $year);
+
+    //execute
+    $stmt->execute();
+    $rows = $stmt->fetchAll();
+    
+    //cleanup and return rows
+    unset($stmt);
+    return $rows;
+}
+
+function getPlannedCoursesSemYear($cid, $sem, $year) {
+    global $db;
+    $query = "SELECT dept_abbr, course_name, course_code, year, semester FROM Student_Plans_Course NATURAL JOIN Course WHERE cid=:cid";
+    $query .= " AND semester = :sem AND year=:year";
+    $query .= " ORDER BY dept_abbr, course_code";
+    $stmt = $db->prepare($query);
+
+    //Set cid
+    $stmt->bindValue(":cid", $cid);
+    $stmt->bindValue(":sem", $sem);
+    $stmt->bindValue(":year", $year);
+
+    //execute
+    $stmt->execute();
+    $rows = $stmt->fetchAll();
+    
+    //cleanup and return rows
+    unset($stmt);
+    return $rows;
+}
+
+function getTakenCoursesSemYear($cid, $sem, $year) {
+    global $db;
+    $query = "SELECT dept_abbr, course_name, course_code, year, semester FROM Student_Takes_Course NATURAL JOIN Course WHERE cid=:cid";
+    $query .= " AND semester = :sem AND year=:year";
+    $query .= " ORDER BY dept_abbr, course_code";
     $stmt = $db->prepare($query);
 
     //Set cid

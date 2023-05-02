@@ -18,7 +18,9 @@ else {
 $years = getYears($cid);
 $semesters = getSems($cid);
 
-$courses = getCourses($cid);
+// $courses = getCourses($cid);
+$planned_courses = getPlannedCourses($cid);
+$taken_courses = getTakenCourses($cid);
 
 $curr_year = "all";
 $curr_sem = "all";
@@ -54,13 +56,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     if($_POST["year"] == "all") {
         $na = true;
         $curr_sem = "na";
-        $courses = getCourses($cid);
+        // $courses = getCourses($cid);
+        $planned_courses = getPlannedCourses($cid);
+        $taken_courses = getTakenCourses($cid);
     }
     else {
         $na = false;
         $curr_sem = $_POST["sem"];
         $curr_year = $_POST["year"];
-        $courses = getCoursesSemYear($cid, $curr_sem, $curr_year);
+        // $courses = getCoursesSemYear($cid, $curr_sem, $curr_year);
+        $planned_courses = getPlannedCoursesSemYear($cid, $curr_sem, $curr_year);
+        $taken_courses = getTakenCoursesSemYear($cid, $curr_sem, $curr_year);
     }
     $curr_year = $_POST["year"];
 }
@@ -137,16 +143,18 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php if($curr_year == "all"): ?>
             <h2>All Courses</h2>
         <?php elseif($curr_year < date("Y")): //definitely older?>
-            <h2>Previously Taken Courses</h2>
+            <h2>Previous Courses</h2>
         <?php else:  //need to check if current semester or in future?>
             <?php if($curr_semester == $curr_sem): ?>
-                <h2> Current Schedule </h2>
+                <h2> Current Semester </h2>
             <?php else: ?>
                 <h2>Planned Courses</h2>
             <?php endif; ?>
         <?php endif; ?>
         <!-- Display list of planned/previously taken courses based on selected year/sem -->
         <!-- If "all" courses, print ordered by year -->
+        <h3> Enrolled </h3>
+        <?php if (count($taken_courses) > 0): //check if taken classes for this semester ?>
         <div class="col-md-9"> 
             <table class="table table-list-search">
                 <thead>
@@ -158,7 +166,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                         <th>Year</th>
                     </tr>
                 </thead>
-                <?php foreach($courses as $row): ?>
+                <?php foreach($taken_courses as $row): ?>
                     <tr>
                         <td><?php echo $row['dept_abbr']; ?></td>
                         <td><?php echo $row['course_code']; ?></td>
@@ -169,6 +177,40 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                 <?php endforeach; ?>
             </table>
         </div>
+        <?php 
+            else:
+                echo "<p> No courses enrolled this semester";
+            endif; 
+        ?>
+        <h3> Planned </h3>
+        <?php if (count($planned_courses) > 0): ?>
+            <div class="col-md-9"> 
+                <table class="table table-list-search">
+                    <thead>
+                        <tr>
+                            <th>Dept</th>
+                            <th>Course</th>
+                            <th>Name</th>
+                            <th>Semester</th>
+                            <th>Year</th>
+                        </tr>
+                    </thead>
+                    <?php foreach($planned_courses as $row): ?>
+                        <tr>
+                            <td><?php echo $row['dept_abbr']; ?></td>
+                            <td><?php echo $row['course_code']; ?></td>
+                            <td><?php echo $row['course_name']; ?></td>
+                            <td><?php echo $row['semester']; ?></td>
+                            <td><?php echo $row['year']; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
+            </div>
+        <?php 
+            else:
+                echo "<p> No courses planned for this semester";
+            endif; 
+        ?>
     </div>
 </body>
 </html>
