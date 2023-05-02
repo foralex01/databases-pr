@@ -3,6 +3,14 @@ $file = substr($_SERVER["SCRIPT_NAME"], 9);
 
 ?>
 
+<head>
+    <style>
+        .navbar-custom .navbar-brand {
+            background-color: "orange";
+        }
+    </style>
+</head>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <div class="navbar-brand">

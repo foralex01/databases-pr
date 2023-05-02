@@ -197,9 +197,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             <td>
                                 <form action="search.php" method="post">
                                     <?php if(isAlreadyPlanned($row["course_code"], $row["dept_abbr"], $row["semester"], $row["year"], $coursesPlanned)): ?>
-                                            <input type="submit" name="RemovePlanner" value="Remove From Planner" class="btn btn-danger" style="width:11.5em" />
+                                            <input type="submit" name="RemovePlanner" value="Remove From Planner" class="btn btn-danger" style="width:11.5em;height:2.5em;" />
                                         <?php else: ?>
-                                            <input type="submit" name="PlannerButton" value="Add to Planner" class="btn btn-dark" style="width:11.5em"/>
+                                            <input type="submit" name="PlannerButton" value="Add to Planner" class="btn btn-dark" style="width:11.5em;height:2.5em;"/>
                                         <?php endif; ?>
                                     <input type="hidden" name="dept_plan" value ="<?php echo $row['dept_abbr']; ?>" />
                                     <input type="hidden" name="code_plan" value ="<?php echo $row['course_code']; ?>" />
@@ -210,9 +210,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                             <td>
                                 <form action="search.php" method="post">
                                     <?php if(isAlreadyTaken($row["course_code"], $row["dept_abbr"], $row["semester"], $row["year"], $coursesTaken)): ?>
-                                            <input type="submit" name="RemoveTaken" value="Unmark as Taken" class="btn btn-danger" style="width:10em"/>
+                                            <input type="submit" name="RemoveTaken" value="Unmark as Taken" class="btn btn-danger" style="width:10em;height:2.5em;"/>
                                     <?php else: ?>
-                                            <input type="submit" name="TakeButton" value="Mark as Taken" class="btn btn-dark" style="width:10em"/>
+                                            <input type="submit" name="TakeButton" value="Mark as Taken" class="btn btn-dark" style="width:10em;height:2.5em;"/>
                                     <?php endif; ?>
                                     <input type="hidden" name="dept_take" value ="<?php echo $row['dept_abbr']; ?>" />
                                     <input type="hidden" name="code_take" value ="<?php echo $row['course_code']; ?>" />

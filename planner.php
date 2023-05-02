@@ -198,7 +198,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                         <td><?php echo $row['year']; ?></td>
                         <td>
                             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-                                <input type="submit" name="TakenDelete" value="remove" class="btn-danger" style="width:6.5em; height:2.3em;" />
+                                <input type="submit" name="TakenDelete" value="remove" class="btn btn-danger" style="width:6.5em; height: 2.2em; margin:auto" />
                                 <input type="hidden" name="dept_abbr" value ="<?php echo $row['dept_abbr']; ?>" />
                                 <input type="hidden" name="course_code" value ="<?php echo $row['course_code']; ?>" />
                                 <input type="hidden" name="year" value = <?php echo $curr_year; ?> />
