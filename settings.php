@@ -110,8 +110,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
   <?php include('navbar.php'); ?>
 
-  <h1 style="font-family:lucida console; font-size: 50px;">Your Profile</h1>
-  <div class="profile-input-field">
+  <p style="font-family:Helvetica Neue; font-size: 50px;margin:6px;">Your Profile</p>
+  <div class="profile-input-field" style="padding:2em">
     <!-- <h3>Keep your profile up-to-date!</h3> -->
     
     <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" >
