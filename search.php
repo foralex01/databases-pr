@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                 <form class="card card-sm" action="search.php" method="post">
                     <div class="card-body row no-gutters align-items-center">
                         <div class="col-lg-3">
-                            <input class="form-control form-control-borderless" type="text" name="searchText" placeholder="Search by keyword" required />
+                            <input class="form-control form-control-borderless" type="text" name="searchText" placeholder="Search by keyword" />
                         </div>
                         <!-- ability to filter semester/year -->
                         <div class="col-lg-3 col-md-3 col-sm-12">
